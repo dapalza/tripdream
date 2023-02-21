@@ -32,14 +32,24 @@
           placeholder=""
           :class="{'input-danger': hasError.customer_pw}"/>
         <p
-          v-show=" hasError.customer_pw"
+          v-show="hasError.customer_pw"
           class="input-error">
           {{errorMsg.customer_pw}}
         </p>
       </v-col>
       <v-col>
         <v-btn class="mt-3" color="black" @click="btnLogin()" outlined v-bind:disabled="btnState!=3">로그인</v-btn>
-      </v-col>    
+      </v-col>
+      <v-col>
+        <div v-show="state.loginFail">
+          <p>
+            아이디(로그인 전용 아이디) 또는 비밀번호를 잘못 입력했습니다.
+          </p>
+          <p>
+            입력하신 내용을 다시 확인해주세요.    
+          </p>
+        </div>
+      </v-col>
       <ul class="look_box">
         <li class="look_list">
           <a class="look_link" href="/join">
@@ -58,95 +68,107 @@
             비밀번호 찾기
           </a>
         </li>
-    </ul>
+      </ul>
     </v-row>
   </v-form>
 </template>
 
 <script>
-import axios from "axios";
-import {ref, reactive,watch} from "vue"
-import {useRouter} from 'vue-router'
-import {useStore} from "vuex"
+// import axios from "axios";
+import {ref, reactive,watch,getCurrentInstance,computed} from "vue"
+// import {useRouter} from 'vue-router'
+// import {useStore} from "vuex"
 
 export default {
-name: "LoginView",
-setup(){
+  name: "LoginView",
+  setup(){
     const state = reactive({   
         statei: 'in',
+        loginFail: computed(()=>proxy.$store.getters["getLoginFail"]),
     })
-    const store = useStore();
-    const router = useRouter();
+    // const store = useStore();
+    // const router = useRouter();
     const btnState = ref(0);
 
     const customer = reactive({
-        customer_pw : "",
-        customer_email : ""
+      customer_pw : "",
+      customer_email : ""
     });
     const hasError = reactive({
-        customer_email: false,
-        customer_pw: false,
+      customer_email: false,
+      customer_pw: false,
     });
     const errorMsg = reactive({
-        customer_email: "",
-        customer_pw: "",
+      customer_email: "",
+      customer_pw: "",
     });
-    
 
-    const setSession = (token) => store.commit("setAccessToken",token);
-
+    const {proxy} = getCurrentInstance();
+    const setLoginFail = (token) => proxy.$store.commit("setLoginFail",token);
     const btnLogin = () =>{
-      axios.post("http://localhost:8088/login",{
-        "customer_email" : customer.customer_email,
-        "customer_pw" : customer.customer_pw,
-      }).then(res=>{
-        console.log(res.data);
-        setSession(res.data.customer_email);
-      }).then(err=>{
-        if(err==null){
-          router.push({name:"main"})
+      proxy.$store.dispatch(
+        "tokenCookies/login",
+        {
+          customer : customer,
+          url:proxy.$getUrl(),
+          // tokenTime : proxy.$getTokenTime(),
+        }
+      ).then(
+        res=>{
+        //  proxy.$store.commit("customer/saveStateToStorage",res);
+          console.log(res);
+          const userInfo ={
+            value : res,
+            expire : Date.now() + proxy.$getTokenTime(),
+          }
+          proxy.$setLocalStoage("customer", JSON.stringify(userInfo));
+          setLoginFail(false);
+          //router.go(-1);
+        }
+      ).catch(
+        err =>{
+          customer.customer_pw="";
+          console.clear();
+          console.log("??"+err);
           
+          setLoginFail(true);
         }
-        else {
-          err;
-        }
-      })
+      );
     };
 
-
     watch(() =>[customer.customer_email],()=> {
-        const email_rule = /^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\.[A-Za-z0-9\\-]+/;
-        if(!customer.customer_email){
-            errorMsg.customer_email = "이메일은 필수 입력사항입니다.";  
-        }
-        else if(!email_rule.test(customer.customer_email)){
-            errorMsg.customer_email = "이메일 주소를 정확히 입력해주세요.";  
-        }
-        else {
-            hasError.customer_email = false;
-            btnState.value = btnState.value | 1;
-            return;
-        }
-        btnState.value = btnState.value & 2;
-        hasError.customer_email = true;
-    });
-    
-  watch(() =>[customer.customer_pw],()=> {
-      const pw_rule = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/;
-      if(!pw_rule.test(customer.customer_pw)){
-          hasError.customer_pw = true;
-          errorMsg.customer_pw = "영문대소문자,숫자,특수문자를 조합하여 입력해주세요.(8-16자)";
-          btnState.value = btnState.value & 1;
+      const email_rule = /^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\.[A-Za-z0-9\\-]+/;
+      if(!customer.customer_email){
+        errorMsg.customer_email = "이메일은 필수 입력사항입니다.";  
+      }
+      else if(!email_rule.test(customer.customer_email)){
+        errorMsg.customer_email = "이메일 주소를 정확히 입력해주세요.";  
       }
       else {
-          hasError.customer_pw = false;
-          btnState.value = btnState.value | 2;
+        hasError.customer_email = false;
+        btnState.value = btnState.value | 1;
+        return;
       }
-  });
+      btnState.value = btnState.value & 2;
+      hasError.customer_email = true;
+    });
+    
+    watch(() =>[customer.customer_pw],()=> {
+      const pw_rule = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/;
+      if(!pw_rule.test(customer.customer_pw)){
+        hasError.customer_pw = true;
+        errorMsg.customer_pw = "영문대소문자,숫자,특수문자를 조합하여 입력해주세요.(8-16자)";
+        btnState.value = btnState.value & 1;
+      }
+      else {
+        hasError.customer_pw = false;
+        btnState.value = btnState.value | 2;
+      }
+    });
     
 
-  return {btnLogin,btnState,errorMsg,hasError,state,customer};
-},
+    return {btnLogin,btnState,errorMsg,hasError,state,customer};
+  },
 }
 </script>
 

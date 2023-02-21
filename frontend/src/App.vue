@@ -2,7 +2,7 @@
   <v-app>
     <CommonHead></CommonHead>
     <v-main>
-      <HelloWorld/>
+      <router-view></router-view>
     </v-main>
     <CommonFoot></CommonFoot>
   </v-app>
@@ -13,14 +13,12 @@
 <script>
 import CommonHead from './area/common-head.vue';
 import CommonFoot from './area/common-foot.vue';
-import HelloWorld from './components/HelloWorld.vue'
 // import TeleoportExample from './teleport/TeleoportExample.vue';
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
     CommonHead,
     CommonFoot,
     // TeleoportExample
