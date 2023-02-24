@@ -6,11 +6,11 @@ import axios from "axios";
 export const tokenCookies ={
   namespaced:true,
   state:{
-      customerNo:"customerNo test",
-      accessToken:null,
-      refreshToken:null,
-      needLogin:true,
-      tokenLifeTime:5,
+    customerNo:"customerNo test",
+    accessToken:null,
+    refreshToken:null,
+    needLogin:true,
+    tokenLifeTime:5,
   },
   getters:{
     getCustomerNo(state){
@@ -20,8 +20,9 @@ export const tokenCookies ={
       return state.needLogin;
     },
     getAccessToken(state){
-      
-      return state.accessToken;
+      state.accessToken = cookies.get("login.accessToken");
+      return cookies.get("login.accessToken");
+//      return state.accessToken;
     },
     getRefreshToken(state){
       return state.refreshToken;

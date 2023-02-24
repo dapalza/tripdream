@@ -5,7 +5,7 @@ import {customer} from "@/store/modules/customer"
 const store = createStore({
   modules:{tokenCookies,customer},
   state:{
-    loginFail:false,
+    loginFail:"",
   },
   getters:{
     getLoginFail(state){

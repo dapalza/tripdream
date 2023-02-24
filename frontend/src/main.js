@@ -9,9 +9,6 @@ import global from "./commonGlobal/global.js"
 
 loadFonts()
 
-//const baseUrl = "http://localhost:8088";
-
-//const app = 
 createApp(App)
 .use(vuetify)
 .use(store)
@@ -21,11 +18,4 @@ createApp(App)
 })
 .use(router)
 .use(global)
-.provide('$store',store)  //?
  .mount('#app');
-
-// app.config.globalProperties.$baseUrl = baseUrl;
-// app.mount('#app');
-// Vue.config.globalProperties.$getUrl = () =>{
-//   return "http://localhost:8088"
-// }
