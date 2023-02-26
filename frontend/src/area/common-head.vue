@@ -8,7 +8,7 @@
         <a>관심상품</a>
       </li>
       <li>
-        <a v-if="!state.loginState" href="login">로그인</a>
+        <a v-if="!state.loginState" @click="login()">로그인</a>
         <a v-if="state.loginState" @click="logout()">로그아웃</a>
       </li>
     </ul>
@@ -43,6 +43,9 @@
 import ModalSignUp from "../modal/modal-signup.vue";
 import { ref,reactive,getCurrentInstance,computed } from "vue";
 import {useRouter} from 'vue-router'
+// import {useStore} from 'vuex'
+
+
 export default {
   name: "CommonHead",
   components: {
@@ -57,6 +60,18 @@ export default {
     const logout = () =>{
       proxy.$store.commit("tokenCookies/reset");
       router.go(0);
+    };
+    const login = () =>{
+      // const url = window.location.href;
+      const nowUrl =window.location.href.slice(proxy.$getUrl().length,window.location.href.length);
+      console.log(nowUrl);
+      // login => login 은 router 자체에서 잡아주는듯 하다!! 아님 말구
+      if(nowUrl == '/join'){
+        router.replace('/login');
+      }
+      else {
+        router.push('/login');
+      }
     };
     const needLogin = computed(()=>{
       proxy.$store.commit("tokenCookies/readStateFromStorage");
@@ -87,6 +102,7 @@ export default {
       state,
       test,
       logout,
+      login,
       needLogin
     };
   }

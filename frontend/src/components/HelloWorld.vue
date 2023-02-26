@@ -1,11 +1,13 @@
 <template>
+  <!-- <CommonHead></CommonHead> -->
   <v-container>
   </v-container>
-  <router-view></router-view>
+  <!-- <router-view></router-view> -->
   <header>MainPage</header>
 </template>
 
 <script>
+// import CommonHead from '../area/common-head.vue';
 import axios from 'axios';
 export default {
   name: "HelloWorld",
@@ -28,6 +30,8 @@ export default {
     importantLinks: [],
     whatsNext: [],
   }),
-  components: { }
+  components:{
+    // CommonHead,
+  },
 }
 </script>

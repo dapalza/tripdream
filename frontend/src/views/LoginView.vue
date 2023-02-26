@@ -52,7 +52,7 @@
       </v-col>
       <ul class="look_box">
         <li class="look_list">
-          <a class="look_link" href="/join">
+          <a class="look_link" @click="join()">
             이메일 가입
           </a>
         </li>
@@ -75,21 +75,23 @@
 
 <script>
 // import axios from "axios";
+import { useRouter } from "vue-router";
 import {ref, reactive,watch,getCurrentInstance,computed} from "vue"
 // import {useRouter} from 'vue-router'
 // import {useStore} from "vuex"
 
+
 export default {
   name: "LoginView",
+  components:{
+  },
   setup(){
     const state = reactive({   
         statei: 'in',
         loginFail: computed(()=>proxy.$store.getters["getLoginFail"]),
     })
-    // const store = useStore();
-    // const router = useRouter();
     const btnState = ref(0);
-
+    
     const customer = reactive({
       customer_pw : "",
       customer_email : ""
@@ -102,9 +104,15 @@ export default {
       customer_email: "",
       customer_pw: "",
     });
-
+    
     const {proxy} = getCurrentInstance();
-    const setLoginFail = (token) => proxy.$store.commit("setLoginFail",token);
+    const email_rule = proxy.$getRule("email");
+    const pw_rule = proxy.$getRule("password");
+    // const setLoginFail = (token) => proxy.$store.commit("setLoginFail",token);
+    const router = useRouter();
+    const join=()=>{
+      router.replace('/join');
+    };
     const btnLogin = () =>{
       proxy.$store.dispatch(
         "tokenCookies/login",
@@ -121,23 +129,24 @@ export default {
             value : res,
             expire : Date.now() + proxy.$getTokenTime(),
           }
-          proxy.$setLocalStoage("customer", JSON.stringify(userInfo));
-          setLoginFail(false);
-          //router.go(-1);
+          proxy.$setLocalStorage("customer", JSON.stringify(userInfo));
+          proxy.$store.commit("setLoginFail","");
+          proxy.$setLocalStorage("loginRefresh", "true");
+          router.go(-1);
+          customer.customer_email="";
         }
       ).catch(
         err =>{
           customer.customer_pw="";
-          console.clear();
           console.log("??"+err);
-          
-          setLoginFail(true);
+          proxy.$store.commit("setLoginFail",true);
         }
       );
     };
-
+    watch(() =>[router],()=>{
+      alert("router");
+    })
     watch(() =>[customer.customer_email],()=> {
-      const email_rule = /^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\.[A-Za-z0-9\\-]+/;
       if(!customer.customer_email){
         errorMsg.customer_email = "이메일은 필수 입력사항입니다.";  
       }
@@ -154,7 +163,6 @@ export default {
     });
     
     watch(() =>[customer.customer_pw],()=> {
-      const pw_rule = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/;
       if(!pw_rule.test(customer.customer_pw)){
         hasError.customer_pw = true;
         errorMsg.customer_pw = "영문대소문자,숫자,특수문자를 조합하여 입력해주세요.(8-16자)";
@@ -167,7 +175,7 @@ export default {
     });
     
 
-    return {btnLogin,btnState,errorMsg,hasError,state,customer};
+    return {join,btnLogin,btnState,errorMsg,hasError,state,customer};
   },
 }
 </script>
