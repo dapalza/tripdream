@@ -47,14 +47,14 @@ public class Customer {
     @Column(name = "customer_resigndate")
     private LocalDateTime resigndate;
 
-    public Customer(RegisterRequest req) {
-        email = req.getEmail();
-        pw = req.getPw();
-        nick = req.getNick();
-        dob = req.getDob();
-        height = req.getHeight();
-        feet = req.getFeet();
-    }
+//    public Customer(RequestRequest req) {
+//        email = req.getEmail();
+//        pw = req.getPw();
+//        nick = req.getNick();
+//        dob = req.getDob();
+//        height = req.getHeight();
+//        feet = req.getFeet();
+//    }
 
     @PrePersist
     private void setCustomerData() {

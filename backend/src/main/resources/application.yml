@@ -3,6 +3,18 @@ spring:
   profiles:
     active: local
 ---
+
+spring:
+thymeleaf:
+prefix: classpath:/templates/
+suffix: .html
+
+
+---
+logging.level:
+  org.hibernate.SQL: debug
+
+---
 spring:
   profiles:
     group:
@@ -21,14 +33,14 @@ spring:
     activate:
       on-profile: "localdb"
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/dapalzadb?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
-    username: yoon
-    password: 1121
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:mysql://localhost:3306/dapalzadb?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+    username: jun
+    password: 1234
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -41,8 +53,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://dapalza-mysql-container:3306/dapalzadb?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
-    username: yoon
-    password: 1121
+    username: jun
+    password: 1234
   jpa:
     show-sql: true
     hibernate:
@@ -50,3 +62,5 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+

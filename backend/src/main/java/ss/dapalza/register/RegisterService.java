@@ -16,10 +16,10 @@ public class RegisterService {
 
     private final RegisterRepository repository;
 
-    public RegisterResponse registerCustomer(RegisterRequest req) {
-        Customer customer = new Customer(req);
-        Customer result = repository.save(customer);
-        RegisterResponse res = new RegisterResponse(result);
-        return res;
-    }
+//    public RegisterResponse registerCustomer(RegisterR req) {
+//        Customer customer = new Customer(req);
+//        Customer result = repository.save(customer);
+//        RegisterResponse res = new RegisterResponse(result);
+//        return res;
+//    }
 }
