@@ -4,14 +4,60 @@ import {createRouter, createWebHistory} from 'vue-router'
 import {useCookies} from "vue3-cookies";
 const {cookies} = useCookies();
 
-import MainView from '../components/HelloWorld'
-import JoinView from '../views/JoinView'
-import LoginView from '../views/LoginView'
+// import MainView from '../components/HelloWorld'
+// import JoinView from '../views/JoinView'
+// import LoginView from '../views/LoginView'
+const KakaoLoginPop  =() => import('../pop/KakaoLoginPop')
+const KakaoLoginView =() => import('../pop/KakaoLoginView')
 
+const MainView = () => import('../views/HelloWorld')
+const JoinView = () => import('../views/JoinView')
+const LoginView =() => import('../views/LoginView')
+const WrongAccess = () => import('../views/WrongAccess')
+// const MenuHeader = () => import('../views/common-head')
+const NotFound = () => import('../views/NotFound')
+const CommonPage = () => import('../area/CommonPage')
+const ErrorPage = () => import('../area/ErrorPage')
+
+//children을 걸은 이유는 common-head의 모든 영역에서 사용하는 것을 막기 위해서
+//만약 전체 영역에서 사용이 되어야 할 경우 children에서 꺼내고 App.vue에 common-head를 추가해준다.
 const routes = [
-  {path:'/',name:"main",component:MainView,},
-  {path:'/join',name:"join", component:JoinView,},
-  {path:'/login',name:"login", component:LoginView,},
+  {
+    path:"/",
+    // component:MenuHeader,
+    component:CommonPage,
+    children:[{
+      path: "/",name:"main",component:MainView,
+    },
+    {
+      path:"/join",name:"join", component:JoinView,
+    },
+    {
+      path:'/login',name:"login", component:LoginView,
+    },]
+  },
+  // {
+  //   path:"/one",
+  //   component:
+  // },
+  {path:'/kakao-login',name:"kakao-login", component:KakaoLoginView,},
+  {path:'/kakao-pop',name:"kakao-pop", component:KakaoLoginPop},
+
+  //각 종 예외 경로로 진입시 경고 페이지로 활용
+  {
+    path:"/error",
+    component:ErrorPage,
+    children:[
+      {
+      path:"",
+      component:WrongAccess,
+    },
+    {
+      path:"/:pathMatch(.*)*",
+      component:NotFound,
+      name:"NotFound"    
+    }]
+  },
 ];
 
 const router = createRouter({
@@ -26,7 +72,6 @@ router.beforeEach((to,from,next)=>{
   if(to.path == from.path){
     next();
   }
-  
   else if(to.path=="/login" || to.path=="/join"){
     if(cookies.isKey("login.refreshToken")){ 
       alert(from.path+"이미 로그인 하셨습니다.");

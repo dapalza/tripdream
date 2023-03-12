@@ -7,6 +7,9 @@ export default{
     Vue.config.globalProperties.$getUrl = () =>{
       return "http://localhost:8088";
     },
+    Vue.config.globalProperties.$getUrlFront = () =>{
+      return "http://localhost:8081";
+    },
     //토큰 시간 최소 단위
     Vue.config.globalProperties.$getTokenTime = () =>{
       return 110;

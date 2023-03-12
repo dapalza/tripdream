@@ -70,22 +70,50 @@
         </li>
       </ul>
     </v-row>
+    <div class="social-login">
+      <button type="button" class="btn btn-login-naver full outline">
+        <img :src="require(`@/assets/naver-btn.png`)"/>
+        네이버 로그인
+      </button>
+      <button type="button" class="btn btn-login-kakao full outline"
+      @click="openLoginPop(`/kakao-pop`)">
+        <img :src="require(`@/assets/kakao-btn.png`)"/>
+        카카오 로그인
+      </button>
+      <SocialLoginPop ref="winPopup"></SocialLoginPop>
+      
+    </div>
   </v-form>
 </template>
 
 <script>
-// import axios from "axios";
+import SocialLoginPop from "../area/WinPop.vue";
 import { useRouter } from "vue-router";
 import {ref, reactive,watch,getCurrentInstance,computed} from "vue"
 // import {useRouter} from 'vue-router'
 // import {useStore} from "vuex"
 
-
 export default {
   name: "LoginView",
   components:{
+    SocialLoginPop
   },
+  methods:{
+    kalogin(){
+      window.Kakao.Auth.authorize({
+        redirectUri:'http://localhost:8081/kakao-login',
+        scope:'profile_nickname',
+      });
+    },
+  },
+
   setup(){
+    const winPopup = ref();
+    
+    const openLoginPop = (uri)=>{
+      winPopup.value.openWinPop( uri , 800, 700 );
+    };
+
     const state = reactive({   
         statei: 'in',
         loginFail: computed(()=>proxy.$store.getters["getLoginFail"]),
@@ -143,9 +171,6 @@ export default {
         }
       );
     };
-    watch(() =>[router],()=>{
-      alert("router");
-    })
     watch(() =>[customer.customer_email],()=> {
       if(!customer.customer_email){
         errorMsg.customer_email = "이메일은 필수 입력사항입니다.";  
@@ -175,12 +200,18 @@ export default {
     });
     
 
-    return {join,btnLogin,btnState,errorMsg,hasError,state,customer};
+    return {
+      openLoginPop,winPopup,join,btnLogin,btnState,errorMsg,hasError,state,customer};
   },
 }
 </script>
 
 <style>
+.login_area{
+    margin:0 auto;
+    padding: 60px 0 160px;
+    width:400px;
+}
 .mt-3{
     width:400px;
     height: 52px;
@@ -200,11 +231,6 @@ export default {
     align-items: flex-start;
     -webkit-box-flex: 1;
     flex:1;
-}
-.login_area{
-    margin:0 auto;
-    padding: 60px 0 160px;
-    width:400px;
 }
 .look_link{
     margin:auto;
@@ -242,5 +268,60 @@ border-bottom: 1px solid red !important;
     width: 1px;
     height: 13px;
     background-color: #d3d3d3;
+}
+
+
+
+.social-login {
+    margin-top: 40px;
+}
+.social-login>button>img {
+  width:35px;
+  height: 35px;
+
+}
+
+.btn{
+  display: -webkit-inline-box;
+  display: inline-flex;
+  cursor: pointer;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  vertical-align: middle;
+  text-align: center;
+  color: rgba(34,34,34,.8);
+  background-color: #fff;
+}
+
+.full{
+  width: 100%;
+  font-size: 16px;
+  letter-spacing: -.16px;
+  font-weight: 700;
+  height: 52px;
+  border-radius: 12px;
+}
+.outline{
+  border: 1px solid #d3d3d3;
+}
+.btn.btn-login-kakao, .btn.btn-login-naver {
+  position: relative;
+  border-color: #ebebeb;
+}
+.social-login>.btn {
+  margin-bottom: 8px;
+}
+.btn-login-kakao>img{
+  padding: 5px;
+}
+.btn-login-kakao{
+  background-color: #FEE500;
+  color: #222;
+}
+.btn-login-naver {
+  background-color: #03C75A;
+  color: #FFF;
 }
 </style>

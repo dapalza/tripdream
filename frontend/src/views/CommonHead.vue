@@ -14,7 +14,7 @@
     </ul>
   </div>
   <div class="head-bottom">
-    <img :src = "require(`@/assets/logo-imso.png`)"/>
+    <img :src = "require(`@/assets/logo-imso.png`)" @click="goHome()"/>
 
     <!--  Dandy's Pale Zapping 멋쟁이의 옅은 재핑 
     재핑은 광고를 넘기기 위해 채널을 재빠르게 바꾸는 행위로
@@ -27,7 +27,8 @@
       menu 예정
     </div>
   </div>
-
+  <!-- <router-view></router-view> -->
+  <!-- <CommonFoot></CommonFoot> -->
   <div>
     <v-btn depressed color="primary" elevation="2" outlined @click="showModal">Mign Up</v-btn>
   </div>
@@ -40,16 +41,19 @@
 </template>
 
 <script>
-import ModalSignUp from "../modal/modal-signup.vue";
+import ModalSignUp from "../modal/modal-signup";
 import { ref,reactive,getCurrentInstance,computed } from "vue";
 import {useRouter} from 'vue-router'
+// import CommonFoot from '../views/common-foot';
+
 // import {useStore} from 'vuex'
 
 
 export default {
   name: "CommonHead",
   components: {
-    ModalSignUp
+    ModalSignUp,
+    // CommonFoot
   },
   setup() {
     const {proxy} = getCurrentInstance();
@@ -62,15 +66,25 @@ export default {
       router.go(0);
     };
     const login = () =>{
-      // const url = window.location.href;
+      // 현재 url
       const nowUrl =window.location.href.slice(proxy.$getUrl().length,window.location.href.length);
       console.log(nowUrl);
-      // login => login 은 router 자체에서 잡아주는듯 하다!! 아님 말구
+      // 현재url => 현재url 은 router 자체에서 잡아주는듯 하다!! 아님 말구
+      // ex) nowUrl == 'login'
       if(nowUrl == '/join'){
         router.replace('/login');
       }
       else {
         router.push('/login');
+      }
+    };
+    const goHome = () =>{
+      const nowUrl =window.location.href.slice(proxy.$getUrl().length,window.location.href.length);
+      if(nowUrl == '/join' || nowUrl =='/login'){
+        router.replace('/');
+      }
+      else {
+        router.push('/');
       }
     };
     const needLogin = computed(()=>{
@@ -103,7 +117,8 @@ export default {
       test,
       logout,
       login,
-      needLogin
+      needLogin,
+      goHome
     };
   }
 }
