@@ -1,7 +1,9 @@
 package ss.dapalza.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import ss.dapalza.dto.req.RegisterRequest;
 
@@ -11,6 +13,8 @@ import java.time.format.DateTimeFormatter;
 
 @Entity
 @Getter
+//승화) setter도 향후 필요할 것 같아서 미리 추가해놓음
+@Setter
 @NoArgsConstructor
 public class Customer {
 
@@ -20,7 +24,9 @@ public class Customer {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String no;
 
-    @Column(name = "customer_email")
+    //승화) Json방식으로 받기 위해서는 Column이 아니라 JsonProperty로
+    //승화) 값을 매칭해야 한다.
+    @JsonProperty(value = "customer_email")
     private String email;
 
     @Column(name = "customer_pw")
