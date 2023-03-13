@@ -1,15 +1,21 @@
+# ?? ????? ??? ?
 spring:
   profiles:
     active: local
-
 ---
 spring:
   profiles:
     group:
-      "local": "localdb"
+      "local": "localdb, common"
       "prod": "proddb"
 
----
+--- # common
+spring:
+  config:
+    activate:
+      on-profile: "common"
+
+--- # localdb
 spring:
   config:
     activate:
@@ -27,7 +33,7 @@ spring:
       hibernate:
         format_sql: true
 
----
+--- # proddb
 spring:
   config:
     activate:

@@ -6,4 +6,6 @@ import ss.dapalza.entity.Customer;
 
 @Repository
 public interface RegisterRepository extends JpaRepository<Customer, String> {
+
+
 }
