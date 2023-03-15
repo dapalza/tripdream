@@ -20,14 +20,13 @@ public class RegisterService {
     private final ExPwRepository exRepo;
     private final PasswordEncoder passwordEncoder;
 
-    public RegisterResponse registerCustomer(RegisterRequest req) {
+    public Customer registerCustomer(RegisterRequest req) {
         String h_pw = hashPassword(req.getPassword());
         Customer customer = new Customer(req, h_pw);
         Expw expw = new Expw(req.getPassword(), customer);
         Customer result = repository.save(customer);
         exRepo.save(expw);
-        RegisterResponse res = new RegisterResponse(result);
-        return res;
+        return result;
     }
 
     public String hashPassword(String pw) {

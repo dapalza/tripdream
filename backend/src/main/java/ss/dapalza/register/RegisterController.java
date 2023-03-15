@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ss.dapalza.dto.req.RegisterRequest;
 import ss.dapalza.dto.res.ErrorResponse;
 import ss.dapalza.dto.res.RegisterResponse;
+import ss.dapalza.entity.Customer;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class RegisterController {
     @PostMapping()
     public ResponseEntity<JSONObject> register(@RequestBody RegisterRequest req) {
         JSONObject body = new JSONObject();
-        RegisterResponse res = service.registerCustomer(req);
+        RegisterResponse res = new RegisterResponse(service.registerCustomer(req));
 
         if(res != null) {
             body.put("res", res);
