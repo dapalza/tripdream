@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.web.bind.annotation.*;
 import ss.dapalza.dto.req.RegisterRequest;
 import ss.dapalza.dto.res.ErrorResponse;
 import ss.dapalza.dto.res.RegisterResponse;
@@ -15,7 +13,8 @@ import ss.dapalza.entity.Customer;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/register")
+@RequestMapping("/api/register")
+@CrossOrigin(origins = {"http://localhost:8080"}, allowedHeaders = {"Authorization"})
 public class RegisterController {
 
     private final RegisterService service;
