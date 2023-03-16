@@ -10,17 +10,6 @@ export default {
   
   name: "KakaoLoginPop",
   
-  data(){
-    return {
-      windowRef:null,
-    }
-  },
-  methods:{
-    testMethod(){
-      console.log("test");
-    },
-  },
-  
   setup(){
     onMounted(()=>{
       console.log("setup mount");
@@ -31,7 +20,7 @@ export default {
     const doKakaoLogin=() =>{
       console.log("router kakao");
       window.Kakao.Auth.authorize({
-        redirectUri:'http://localhost:8081/kakao-login',
+        redirectUri:'http://localhost:8088/kakao-login',
         state: 'userme',
       })
     }

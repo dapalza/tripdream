@@ -98,15 +98,6 @@ export default {
   components:{
     SocialLoginPop
   },
-  methods:{
-    kalogin(){
-      window.Kakao.Auth.authorize({
-        redirectUri:'http://localhost:8081/kakao-login',
-        scope:'profile_nickname',
-      });
-    },
-  },
-
   setup(){
     const winPopup = ref();
     
