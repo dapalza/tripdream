@@ -4,17 +4,17 @@ import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 import ss.dapalza.dto.req.RegisterRequest;
 import ss.dapalza.dto.res.ErrorResponse;
 import ss.dapalza.dto.res.RegisterResponse;
-
-import javax.servlet.http.HttpServletResponse;
-import java.net.http.HttpResponse;
+import ss.dapalza.entity.Customer;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/register")
+@RequestMapping("/api/register")
+@CrossOrigin(origins = {"http://localhost:8080"}, allowedHeaders = {"Authorization"})
 public class RegisterController {
 
     private final RegisterService service;
@@ -22,7 +22,7 @@ public class RegisterController {
     @PostMapping()
     public ResponseEntity<JSONObject> register(@RequestBody RegisterRequest req) {
         JSONObject body = new JSONObject();
-        RegisterResponse res = service.registerCustomer(req);
+        RegisterResponse res = new RegisterResponse(service.registerCustomer(req));
 
         if(res != null) {
             body.put("res", res);

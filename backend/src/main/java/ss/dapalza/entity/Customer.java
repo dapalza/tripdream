@@ -47,10 +47,14 @@ public class Customer {
     @Column(name = "customer_resigndate")
     private LocalDateTime resigndate;
 
-    public Customer(RegisterRequest req) {
+    @OneToOne
+    @JoinColumn(name = "code")
+    private Expw expw;
+
+    public Customer(RegisterRequest req, String h_pw) {
         email = req.getEmail();
-        pw = req.getPw();
-        nick = req.getNick();
+        pw = h_pw;
+        nick = req.getUsername();
         dob = req.getDob();
         height = req.getHeight();
         feet = req.getFeet();
@@ -59,7 +63,6 @@ public class Customer {
     @PrePersist
     private void setCustomerData() {
         this.regdate = LocalDateTime.now();
-        this.no = regdate.format(DateTimeFormatter.ofPattern("yyMMdd"));
         this.resigndate = null;
     }
 
