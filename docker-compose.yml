@@ -1,0 +1,39 @@
+version: "3"
+services:
+  database:
+    container_name: dapalza-mysql
+    image: mysql
+    environment:
+      MYSQL_DATABASE: dapalzadb
+      MYSQL_USER: yoon
+      MYSQL_PASSWORD: 1121
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: 1121
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    networks: 
+      - mysql-db-network
+    restart: unless-stopped
+    command:
+      - "mysqld"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+  application:
+    build: .
+    depends_on:
+      - database
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://dapalza-mysql:3306/dapalzadb?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_USERNAME: yoon
+      SPRING_DATASOURCE_PASSWORD: 1121
+    networks:
+      - mysql-db-network
+    restart: always
+
+networks:
+  mysql-db-network:
+
+volumes:
+  mysql-data:
