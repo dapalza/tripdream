@@ -1,5 +1,5 @@
 FROM lpicanco/java11-alpine
-VOLUME 	/tmp
+VOLUME 	/volumes/dapalza_mysql/_data
 ARG JAR_FILE=./build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
