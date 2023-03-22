@@ -1,5 +1,5 @@
 FROM openjdk:11
-CMD ["./backend/gradlew", "clean", "package"]
+CMD ["./gradlew", "clean", "package"]
 VOLUME 	/tmp
 
 COPY gradlew .
@@ -13,6 +13,6 @@ RUN ./gradlew bootJar
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 
-ENV    PROFILE prod
+ENV PROFILE prod
 
 ENTRYPOINT ["java", "-Dspring.profiles.active=${PROFILE}", "-jar","/app.jar"]

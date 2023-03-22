@@ -13,7 +13,7 @@ services:
       - mysql-data:/var/lib/mysql
     ports:
       - 3306:3306
-    networks: 
+    networks:
       - mysql-db-network
     restart: unless-stopped
     command:
@@ -22,7 +22,7 @@ services:
       - "--collation-server=utf8mb4_unicode_ci"
   application:
     build:
-      context: ./backend/
+      context: ./
       dockerfile: Dockerfile
     depends_on:
       - database
