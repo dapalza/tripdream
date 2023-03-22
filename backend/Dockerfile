@@ -1,5 +1,16 @@
-FROM lpicanco/java11-alpine
+FROM openjdk:11
+CMD ["./gradlew", "clean", "package"]
 VOLUME 	/tmp
-ARG JAR_FILE=/backend/build/libs/*.jar
+
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
+COPY src src
+RUN chmod +x ./gradlew
+RUN ./gradlew bootJar
+
+ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+ENTRYPOINT ["java", "-jar", "/app.jar"]
