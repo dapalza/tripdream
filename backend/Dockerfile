@@ -1,6 +1,6 @@
 FROM openjdk:11
 CMD ["./gradlew", "clean", "package"]
-VOLUME 	/tmp
+# VOLUME 	/tmp
 
 # COPY gradlew .
 # COPY gradle gradle
@@ -10,9 +10,10 @@ VOLUME 	/tmp
 # RUN chmod +x ./gradlew
 # RUN ./gradlew bootJar
 
-ARG JAR_FILE=build/libs/*.jar
-COPY ${JAR_FILE} app.jar
+# ARG JAR_FILE=build/libs/*.jar
+# COPY ${JAR_FILE} app.jar
 
+ADD build/libs/app.jar app.jar
 ENV PROFILE prod
 
 ENTRYPOINT ["java", "-Dspring.profiles.active=${PROFILE}", "-jar","/app.jar"]
