@@ -20,10 +20,14 @@ services:
       - "mysqld"
       - "--character-set-server=utf8mb4"
       - "--collation-server=utf8mb4_unicode_ci"
-  application:
+  back:
     build:
-      context: ..
+      context: ./backend
       dockerfile: Dockerfile
+    image: jenkins/dapalza-back
+    container_name: dapalza-back
+    ports:
+      - 8082:8082
     depends_on:
       - database
     environment:
@@ -32,10 +36,25 @@ services:
       SPRING_DATASOURCE_PASSWORD: 1121
     networks:
       - mysql-db-network
-    restart: always
+      - frontback
+    restart: unless-stopped
+  front:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: jenkins/dapalza-front
+    container_name: dapalza-front
+    ports:
+      - 8084:8084
+    depends_on:
+      - back
+    networks:
+      - frontback
+    restart: unless-stopped
 
 networks:
   mysql-db-network:
+  frontback:
 
 volumes:
   mysql-data:
