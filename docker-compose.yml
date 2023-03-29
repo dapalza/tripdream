@@ -31,7 +31,7 @@ services:
     depends_on:
       - database
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://dapalza-mysql:3306/dapalzadb?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_URL: jdbc:mysql://dapalza-mysql:3308/dapalzadb?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
       SPRING_DATASOURCE_USERNAME: yoon
       SPRING_DATASOURCE_PASSWORD: 1121
     networks:
