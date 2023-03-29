@@ -36,7 +36,7 @@ import axios from "axios";
     // }).catch(err=>{
     //   console.log(err);
     // });
-    axios.get("http://localhost:8080/kakao-login?code="+ code)
+    axios.get("http://localhost:8084/kakao-login?code="+ code)
     .then(res =>{  
       console.log(res);
     }).catch(err=>{

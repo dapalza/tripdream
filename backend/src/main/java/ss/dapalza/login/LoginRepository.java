@@ -7,6 +7,9 @@ import ss.dapalza.entity.Customer;
 @Repository
 public interface LoginRepository extends JpaRepository<Customer, String> {
 
+    Customer findByEmail(String email);
+
+    
 
 //    Customer findCustomer(String customerEmail, String customerPw);
 }

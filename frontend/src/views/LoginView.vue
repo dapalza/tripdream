@@ -20,7 +20,7 @@
         </p>
       </v-col>
       <v-col cols="12">
-        <h3 
+        <h3
           class="input-title"
           :class="{'title-danger':hasError.customer_pw}">
           비밀번호
@@ -58,13 +58,13 @@
         </li>
         
         <li class="look_list">
-          <a class="look_link" >
+          <a class="look_link">
             이메일 찾기
           </a>
         </li>
         
         <li class="look_list">
-          <a class="look_link" >
+          <a class="look_link">
             비밀번호 찾기
           </a>
         </li>
@@ -151,7 +151,8 @@ export default {
           proxy.$setLocalStorage("customer", JSON.stringify(userInfo));
           proxy.$store.commit("setLoginFail","");
           proxy.$setLocalStorage("loginRefresh", "true");
-          router.go(-1);
+          // router.go(-1);
+          router.push('/');
           customer.customer_email="";
         }
       ).catch(
