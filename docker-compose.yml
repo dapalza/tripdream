@@ -54,9 +54,7 @@ services:
 
 networks:
   mysql-db-network:
-    external: true
   frontback:
-    external: true
 
 volumes:
   mysql-data:
