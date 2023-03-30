@@ -1,6 +1,6 @@
 version: "3"
 services:
-  database:
+  dapalza-mysql:
     container_name: dapalza-mysql
     image: mysql
     environment:
@@ -15,7 +15,7 @@ services:
       - 3308:3308
     networks:
       - mysql-db-network
-    restart: unless-stopped
+    restart: always
     command:
       - "mysqld"
       - "--character-set-server=utf8mb4"
@@ -29,15 +29,15 @@ services:
     ports:
       - 8082:8082
     depends_on:
-      - database
+      - dapalza-mysql
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://dapalza-mysql:3306/dapalzadb?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_URL: jdbc:mysql://dapalza-mysql:3308/dapalzadb?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
       SPRING_DATASOURCE_USERNAME: yoon
       SPRING_DATASOURCE_PASSWORD: 1121
     networks:
       - mysql-db-network
       - frontback
-    restart: unless-stopped
+    restart: always
   front:
     build:
       context: ./frontend
@@ -54,7 +54,9 @@ services:
 
 networks:
   mysql-db-network:
+    external: true
   frontback:
+    external: true
 
 volumes:
   mysql-data:
