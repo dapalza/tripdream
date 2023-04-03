@@ -41,7 +41,7 @@ spring:
       on-profile: "proddb"
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://fleescape.shop:3308/dapalzadb?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://146.56.129.98:3308/dapalzadb?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
     username: yoon
     password: 1121
   jpa:
