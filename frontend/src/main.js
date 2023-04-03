@@ -18,4 +18,6 @@ createApp(App)
 })
 .use(router)
 .use(global)
- .mount('#app');
+.mount('#app');
+
+window.Kakao.init("998ea5ac18af79fb613db9e18647988f");

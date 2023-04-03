@@ -14,13 +14,13 @@ export default {
   setup() {
     axios.get("http://localhost:8088/", { withCredentials: true }).then(res => {
       console.log(res);
-    }).then(err => {
+    }).catch(err => {
       if(err)
         console.log(err +"!");
     });
     axios.post("http://localhost:8088/common", { "code_cg": "ADR", "code_dp": "6" }).then(res => {
       console.log(res);
-    }).then(err => {
+    }).catch(err => {
       if(err)
         console.log(err +"?");
     });
