@@ -1,0 +1,66 @@
+spring:
+  profiles:
+    active: prod
+server:
+  port: 8082
+---
+
+# spring:
+# thymeleaf:
+# prefix: classpath:/templates/
+# suffix: .html
+
+---
+logging.level:
+  org.hibernate.SQL: debug
+
+---
+spring:
+  profiles:
+    group:
+      "local": "localdb, common"
+      "prod": "proddb"
+
+--- # common
+spring:
+  config:
+    activate:
+      on-profile: "common"
+
+--- # localdb
+spring:
+  config:
+    activate:
+      on-profile: "localdb"
+  datasource:
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:mysql://localhost:3306/dapalzadb?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+    username: root
+    password: 1234
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+--- # proddb
+spring:
+  config:
+    activate:
+      on-profile: "proddb"
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://146.56.129.98:3306/dapalzadb?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+    username: yoon
+    password: 1121
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+
+
