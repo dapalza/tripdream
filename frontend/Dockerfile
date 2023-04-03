@@ -12,3 +12,4 @@ FROM nginx:stable-alpine as production-stage
 RUN rm -rf /usr/share/nginx/html/*
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 EXPOSE 8084
+CMD ["nginx", "-g", "daemon off;"]
