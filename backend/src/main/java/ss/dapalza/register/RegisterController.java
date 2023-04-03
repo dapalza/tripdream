@@ -9,29 +9,27 @@ import ss.dapalza.dto.req.RegisterRequest;
 import ss.dapalza.dto.res.ErrorResponse;
 import ss.dapalza.dto.res.RegisterResponse;
 
-import javax.servlet.http.HttpServletResponse;
-import java.net.http.HttpResponse;
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/register")
+@RequestMapping("/api/register")
+@CrossOrigin(origins = {"http://localhost:8082"}, allowedHeaders = {"Authorization"})
 public class RegisterController {
 
     private final RegisterService service;
 
-//    @PostMapping()
-//    public ResponseEntity<JSONObject> register(@RequestBody RegisterRequest req) {
-//        JSONObject body = new JSONObject();
-//        RegisterResponse res = service.registerCustomer(req);
+    @PostMapping()
+    public ResponseEntity<JSONObject> register(@RequestBody RegisterRequest req) {
+        JSONObject body = new JSONObject();
+        RegisterResponse res = new RegisterResponse(service.registerCustomer(req));
 
-//        if(res != null) {
-//            body.put("res", res);
-//            return new ResponseEntity<>(body, HttpStatus.OK);
-//        } else {
-//            JSONObject error = new JSONObject();
-//            error.put("error", ErrorResponse.NOT_FOUND);
-//            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-//        }
+       if(res != null) {
+           body.put("res", res);
+           return new ResponseEntity<>(body, HttpStatus.OK);
+       } else {
+           JSONObject error = new JSONObject();
+           error.put("error", ErrorResponse.NOT_FOUND);
+           return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+       }
 
-//    }
+   }
 }

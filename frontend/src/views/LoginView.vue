@@ -152,7 +152,7 @@ export default {
           proxy.$store.commit("setLoginFail","");
           proxy.$setLocalStorage("loginRefresh", "true");
           // router.go(-1);
-          router.push('/');
+          router.replace('/');
           customer.customer_email="";
         }
       ).catch(

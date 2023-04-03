@@ -1,0 +1,60 @@
+version: "3"
+services:
+  dapalza-mysql:
+    container_name: dapalza-mysql
+    image: mysql
+    environment:
+      MYSQL_DATABASE: dapalzadb
+      MYSQL_USER: yoon
+      MYSQL_PASSWORD: 1121
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: 1121
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - 3308:3308
+    networks:
+      - mysql-db-network
+    restart: always
+    command:
+      - "mysqld"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+  back:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: jenkins/dapalza-back
+    container_name: dapalza-back
+    ports:
+      - 8082:8082
+    depends_on:
+      - dapalza-mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://dapalza-mysql:3308/dapalzadb?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_USERNAME: yoon
+      SPRING_DATASOURCE_PASSWORD: 1121
+    networks:
+      - mysql-db-network
+      - frontback
+    restart: always
+  front:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: jenkins/dapalza-front
+    container_name: dapalza-front
+    ports:
+      - 8084:8084
+    depends_on:
+      - back
+    networks:
+      - frontback
+    restart: unless-stopped
+
+networks:
+  mysql-db-network:
+  frontback:
+
+volumes:
+  mysql-data:
