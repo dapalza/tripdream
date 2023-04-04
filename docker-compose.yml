@@ -18,7 +18,7 @@ services:
     image: jenkins/dapalza-front
     container_name: dapalza-front
     ports:
-      - 8084:8084
+      - 8084:80
     depends_on:
       - back
     networks:
