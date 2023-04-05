@@ -12,9 +12,7 @@ import ss.dapalza.entity.Customer;
 import ss.dapalza.entity.LoginEvent;
 import ss.dapalza.entity.LoginInfo;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -28,11 +26,11 @@ public class LoginController {
     public ResponseEntity<JSONObject> signInRest(@RequestBody Customer customerT) {
         JSONObject body = new JSONObject();
         Customer customer = loginService.login(customerT);
-        LoginResponse res = new LoginResponse(customer);
         LoginEvent le = new LoginEvent(customer);
         LoginInfo li = new LoginInfo(customer);
-        if(res != null){
-            body.put("res",res);
+        if(li != null){
+            body.put("customer",li);
+            body.put("event",le);
             body.put("status", "200");
             return new ResponseEntity<>(body,HttpStatus.OK);
         }
