@@ -7,7 +7,6 @@ import ss.dapalza.dto.req.RegisterRequest;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Entity
 @Getter
@@ -26,7 +25,7 @@ public class Customer {
     private String email;
 
     @Column(name = "customer_pw")
-    private String pw;
+    private String password;
 
     @Column(name = "customer_nick")
     private String nick;
@@ -54,17 +53,18 @@ public class Customer {
     private Expw expw;
 
     public Customer(RegisterRequest req, String h_pw) {
-        email = req.getEmail();
-        pw = h_pw;
-        nick = req.getUsername();
-        dob = req.getDob();
-        height = req.getHeight();
-        feet = req.getFeet();
+        this.email = req.getEmail();
+        this.password = h_pw;
+        this.nick = req.getUsername();
+        this.dob = req.getDob();
+        this.height = req.getHeight();
+        this.feet = req.getFeet();
     }
 
     @PrePersist
     private void setCustomerData() {
         this.regdate = LocalDateTime.now();
+        this.updatedate = LocalDateTime.now();
         this.resigndate = null;
     }
 

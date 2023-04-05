@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import ss.dapalza.dto.res.ErrorResponse;
 import ss.dapalza.dto.res.LoginResponse;
 import ss.dapalza.entity.Customer;
+import ss.dapalza.entity.LoginEvent;
+import ss.dapalza.entity.LoginInfo;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -25,9 +25,12 @@ public class LoginController {
     @PostMapping(value="/signIn")
     public ResponseEntity<JSONObject> signInRest(@RequestBody Customer customerT) {
         JSONObject body = new JSONObject();
-        LoginResponse res = new LoginResponse(loginService.login(customerT));
-        if(res != null){
-            body.put("res",res);
+        Customer customer = loginService.login(customerT);
+        LoginEvent le = new LoginEvent(customer);
+        LoginInfo li = new LoginInfo(customer);
+        if(li != null){
+            body.put("customer",li);
+            body.put("event",le);
             body.put("status", "200");
             return new ResponseEntity<>(body,HttpStatus.OK);
         }

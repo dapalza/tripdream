@@ -1,9 +1,7 @@
 package ss.dapalza.login;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -11,17 +9,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ss.dapalza.entity.Customer;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 //https://ed97-114-207-58-5.jp.ngrok.io/api/register
 
 
 @RequiredArgsConstructor
-@Slf4j
 @RestController
 public class SocialLoginController {
 

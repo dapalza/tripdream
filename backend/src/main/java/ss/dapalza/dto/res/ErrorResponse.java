@@ -1,7 +1,6 @@
 package ss.dapalza.dto.res;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public enum ErrorResponse {

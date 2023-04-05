@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import ss.dapalza.entity.Customer;
 
-import javax.persistence.Column;
 import java.time.LocalDateTime;
 
 @Getter
+@AllArgsConstructor
 public class LoginResponse {
 
     private String no;

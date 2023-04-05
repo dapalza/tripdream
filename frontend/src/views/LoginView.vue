@@ -4,41 +4,41 @@
       <v-col cols="12">
         <h3 
           class="input-title"
-          :class="{'title-danger':hasError.customer_email}">
+          :class="{'title-danger':hasError.email}">
           이메일 주소
         </h3>
         <input 
-          v-model="customer.customer_email"
+          v-model="customer.email"
           class="input-item"
           type="text"
           placeholder="예) exam@exam.ex"
-          :class="{'input-danger': hasError.customer_email}"/>
+          :class="{'input-danger': hasError.email}"/>
         <p
-          v-show="hasError.customer_email"
+          v-show="hasError.email"
           class="input-error">
-          {{errorMsg.customer_email}}
+          {{errorMsg.email}}
         </p>
       </v-col>
       <v-col cols="12">
         <h3
           class="input-title"
-          :class="{'title-danger':hasError.customer_pw}">
+          :class="{'title-danger':hasError.password}">
           비밀번호
         </h3>
         <input 
-          v-model="customer.customer_pw"
+          v-model="customer.password"
           class="input-item"
           type="password"
           placeholder=""
-          :class="{'input-danger': hasError.customer_pw}"/>
+          :class="{'input-danger': hasError.password}"/>
         <p
-          v-show="hasError.customer_pw"
+          v-show="hasError.password"
           class="input-error">
-          {{errorMsg.customer_pw}}
+          {{errorMsg.password}}
         </p>
       </v-col>
       <v-col>
-        <v-btn class="mt-3" color="black" @click="btnLogin()" outlined v-bind:disabled="btnState!=3">로그인</v-btn>
+        <v-btn class="mt-3" color="black" @click="btnLogin()" outlined v-bind:disabled="btnState!=1">로그인</v-btn>
       </v-col>
       <v-col>
         <div v-show="state.loginFail">
@@ -112,21 +112,21 @@ export default {
     const btnState = ref(0);
     
     const customer = reactive({
-      customer_pw : "",
-      customer_email : ""
+      password : "",
+      email : ""
     });
     const hasError = reactive({
-      customer_email: false,
-      customer_pw: false,
+      email: false,
+      password: false,
     });
     const errorMsg = reactive({
-      customer_email: "",
-      customer_pw: "",
+      email: "",
+      password: "",
     });
     
     const {proxy} = getCurrentInstance();
     const email_rule = proxy.$getRule("email");
-    const pw_rule = proxy.$getRule("password");
+    // const password_rule = proxy.$getRule("password");
     // const setLoginFail = (token) => proxy.$store.commit("setLoginFail",token);
     const router = useRouter();
     const join=()=>{
@@ -153,43 +153,43 @@ export default {
           proxy.$setLocalStorage("loginRefresh", "true");
           // router.go(-1);
           router.replace('/');
-          customer.customer_email="";
+          customer.email="";
         }
       ).catch(
         err =>{
-          customer.customer_pw="";
+          customer.password="";
           console.log("??"+err);
           proxy.$store.commit("setLoginFail",true);
         }
       );
     };
-    watch(() =>[customer.customer_email],()=> {
-      if(!customer.customer_email){
-        errorMsg.customer_email = "이메일은 필수 입력사항입니다.";  
+    watch(() =>[customer.email],()=> {
+      if(!customer.email){
+        errorMsg.email = "이메일은 필수 입력사항입니다.";  
       }
-      else if(!email_rule.test(customer.customer_email)){
-        errorMsg.customer_email = "이메일 주소를 정확히 입력해주세요.";  
+      else if(!email_rule.test(customer.email)){
+        errorMsg.email = "이메일 주소를 정확히 입력해주세요.";  
       }
       else {
-        hasError.customer_email = false;
+        hasError.email = false;
         btnState.value = btnState.value | 1;
         return;
       }
       btnState.value = btnState.value & 2;
-      hasError.customer_email = true;
+      hasError.email = true;
     });
     
-    watch(() =>[customer.customer_pw],()=> {
-      if(!pw_rule.test(customer.customer_pw)){
-        hasError.customer_pw = true;
-        errorMsg.customer_pw = "영문대소문자,숫자,특수문자를 조합하여 입력해주세요.(8-16자)";
-        btnState.value = btnState.value & 1;
-      }
-      else {
-        hasError.customer_pw = false;
-        btnState.value = btnState.value | 2;
-      }
-    });
+    // watch(() =>[customer.password],()=> {
+    //   if(!password_rule.test(customer.password)){
+    //     hasError.password = true;
+    //     errorMsg.password = "영문대소문자,숫자,특수문자를 조합하여 입력해주세요.(8-16자)";
+    //     btnState.value = btnState.value & 1;
+    //   }
+    //   else {
+    //     hasError.password = false;
+    //     btnState.value = btnState.value | 2;
+    //   }
+    // });
     
 
     return {
