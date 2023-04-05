@@ -68,7 +68,7 @@ export const tokenCookies ={
     login({commit},params){
       return new Promise((resolve,reject) =>{
         try{    
-          axios.post(params.url+"/login",params.customer)
+          axios.post("/api/signIn",params.customer)
           .then(res=>{
             console.log(res.data);
             const access = res.data.customer_email;

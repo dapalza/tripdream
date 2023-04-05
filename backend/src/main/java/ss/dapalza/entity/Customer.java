@@ -65,6 +65,7 @@ public class Customer {
     @PrePersist
     private void setCustomerData() {
         this.regdate = LocalDateTime.now();
+        this.updatedate = LocalDateTime.now();
         this.resigndate = null;
     }
 

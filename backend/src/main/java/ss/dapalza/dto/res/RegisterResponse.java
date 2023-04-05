@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import java.time.LocalDateTime;
 
 @Getter
+@AllArgsConstructor
 public class RegisterResponse {
     private String no;
 
@@ -29,16 +30,16 @@ public class RegisterResponse {
 
     private LocalDateTime resigndate;
 
-    public RegisterResponse(Customer customer) {
-        this.no = customer.getNo();;
-        this.email = customer.getEmail();
-        this.pw = customer.getPw();
-        this.nick = customer.getNick();
-        this.dob = customer.getDob();
-        this.height = customer.getHeight();
-        this.feet = customer.getFeet();
-        this.regdate = customer.getRegdate();
-        this.updatedate = customer.getUpdatedate();
-        this.resigndate = customer.getResigndate();
-    }
+    // public RegisterResponse(Customer customer) {
+    //     this.no = customer.getNo();;
+    //     this.email = customer.getEmail();
+    //     this.pw = customer.getPw();
+    //     this.nick = customer.getNick();
+    //     this.dob = customer.getDob();
+    //     this.height = customer.getHeight();
+    //     this.feet = customer.getFeet();
+    //     this.regdate = customer.getRegdate();
+    //     this.updatedate = customer.getUpdatedate();
+    //     this.resigndate = customer.getResigndate();
+    // }
 }
