@@ -5,7 +5,8 @@ export default{
     // Vue.config.globalProperties.$store = store;
     //서버 주소
     Vue.config.globalProperties.$getUrl = () =>{
-      return "http://localhost:8082";
+      return "http://fleescape.shop:8082";
+      // return "http://localhost:8082";
     },
     Vue.config.globalProperties.$getUrlFront = () =>{
       return "http://localhost:8084";

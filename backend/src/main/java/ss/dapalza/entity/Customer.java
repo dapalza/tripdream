@@ -19,8 +19,6 @@ public class Customer {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String no;
 
-    //승화) Json방식으로 받기 위해서는 Column이 아니라 JsonProperty로
-    //승화) 값을 매칭해야 한다.
     @Column(name = "customer_email")
     private String email;
 

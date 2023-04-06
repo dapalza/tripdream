@@ -4,7 +4,8 @@ module.exports = defineConfig({
   devServer:{
     proxy:{
       '/api':{
-        target: 'http://localhost:8082',
+        target: 'http://fleescape.shop:8082',
+        // target: 'http://localhost:8082',
         changeOrigin: true,
       }
     }
