@@ -19,14 +19,16 @@ spring:
   profiles:
     group:
       "local": "localdb, common"
-      "prod": "proddb"
+      "prod": "proddb, common"
 
 --- # common
 spring:
   config:
     activate:
       on-profile: "common"
-
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 --- # localdb
 spring:
   config:

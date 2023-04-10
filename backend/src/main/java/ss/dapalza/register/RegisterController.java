@@ -1,5 +1,7 @@
 package ss.dapalza.register;
 
+import io.swagger.annotations.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,8 @@ public class RegisterController {
     private final RegisterService service;
 
     @PostMapping()
+    @Operation(summary = "회원가입", description = "/api/register로 요청")
+    @ApiResponse(code = 200, message = "test message")
     public ResponseEntity<JSONObject> register(@RequestBody RegisterRequest req) {
         JSONObject body = new JSONObject();
         RegisterResponse res = new RegisterResponse(service.registerCustomer(req));
