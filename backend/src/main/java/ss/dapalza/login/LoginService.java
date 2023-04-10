@@ -2,7 +2,9 @@ package ss.dapalza.login;
 
 
 import lombok.RequiredArgsConstructor;
+import ss.dapalza.dto.login.LoginToken;
 import ss.dapalza.entity.Customer;
+import ss.dapalza.entity.DPZToken;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,7 +13,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class LoginService{
-    @Autowired
+
+    private final TokenRepository tokenRep;
     private final LoginRepository loginRepository;
 
     public Customer login(Customer customer){
@@ -36,5 +39,11 @@ public class LoginService{
 
     public boolean checkPassword(String pw, String ex_pw) {
         return passwordEncoder.matches(pw, ex_pw);
+    }
+
+    public DPZToken makeToken(String customerNo, LoginToken lt) {
+        DPZToken result = new DPZToken(customerNo,lt);
+        result = tokenRep.save(result);
+        return result;
     }
 }

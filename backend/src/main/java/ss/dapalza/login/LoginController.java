@@ -6,11 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import ss.dapalza.dto.login.LoginEvent;
+import ss.dapalza.dto.login.LoginInfo;
+import ss.dapalza.dto.login.LoginToken;
 import ss.dapalza.dto.res.ErrorResponse;
-import ss.dapalza.dto.res.LoginResponse;
 import ss.dapalza.entity.Customer;
-import ss.dapalza.entity.LoginEvent;
-import ss.dapalza.entity.LoginInfo;
+import ss.dapalza.entity.DPZToken;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -18,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LoginController {
 
-    @Autowired
     private final LoginService loginService;
 
 
@@ -28,9 +28,12 @@ public class LoginController {
         Customer customer = loginService.login(customerT);
         LoginEvent le = new LoginEvent(customer);
         LoginInfo li = new LoginInfo(customer);
-        if(li != null){
+        LoginToken lt = new LoginToken();
+        DPZToken token = loginService.makeToken(customer.getNo(),lt);
+        if(token.getIsUse()){
             body.put("customer",li);
             body.put("event",le);
+            body.put("token",lt);
             body.put("status", "200");
             return new ResponseEntity<>(body,HttpStatus.OK);
         }

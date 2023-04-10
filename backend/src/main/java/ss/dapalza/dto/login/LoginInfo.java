@@ -1,7 +1,8 @@
-package ss.dapalza.entity;
+package ss.dapalza.dto.login;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import ss.dapalza.entity.Customer;
 import ss.dapalza.util.TimeControl;
 
 
@@ -22,7 +23,7 @@ public class LoginInfo {
     }
 
     private int getCustomerAge(String dob) {
-        return new TimeControl().getAge(dob);
+        return new TimeControl().GetAge(dob);
     }
 
 }
