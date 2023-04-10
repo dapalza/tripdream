@@ -2,10 +2,13 @@ package ss.dapalza.login;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import ss.dapalza.entity.Customer;
+import ss.dapalza.entity.DPZToken;
 
 public interface LoginRepository extends JpaRepository<Customer, String> {
 
     Customer findByEmail(String email);
+
+    void save(DPZToken result);
 
     
 
