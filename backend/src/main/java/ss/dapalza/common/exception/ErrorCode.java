@@ -1,4 +1,4 @@
-package ss.dapalza.dto.code;
+package ss.dapalza.common.exception;
 
 import lombok.Getter;
 
@@ -6,9 +6,11 @@ import lombok.Getter;
 public enum ErrorCode {
 
     // Common
-    INVALID_INPUT_VALUE(400, "C001", "Invalid Input Value"),
+    INVALID_INPUT_VALUE(400, "C001", "입력값이 틀렸습니다."),
     METHOD_NOT_ALLOWED(405, "C002", "Method Not Allowed"),
-    HANDLE_ACCESS_DENIED(403, "C006", "Access is Denied"),
+    HANDLE_ACCESS_DENIED(403, "C006", "접근이 거부되었습니다."),
+    
+    BINDING_EXCEPTION(405, "C003", "바인딩 예외 발생"),
 
     // Member
     // register
@@ -20,9 +22,9 @@ public enum ErrorCode {
 
     ;
 
-    private final String code;
-    private final String message;
-    private final int status;
+    final String code;
+    final String message;
+    final int status;
 
     ErrorCode(final int status, final String code, final String message) {
         this.status = status;

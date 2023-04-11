@@ -3,28 +3,36 @@ package ss.dapalza.common.handler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ss.dapalza.dto.code.ErrorCode;
+import ss.dapalza.common.exception.ErrorCode;
+import ss.dapalza.common.exception.LoginInputInvalidException;
+import ss.dapalza.common.exception.PasswordIncorrectException;
 import ss.dapalza.dto.res.ErrorResponse;
-
-import javax.validation.ConstraintViolationException;
 
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleLoginInputInvalidException(ConstraintViolationException exception) {
-        ErrorResponse response = new ErrorResponse(ErrorCode.LOGIN_INPUT_INVALID);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<ErrorResponse> handleBindingException(BindException be) {
+        BindingResult bindingResult = be.getBindingResult();
+        ErrorResponse errorResponse = new ErrorResponse(ErrorCode.BINDING_EXCEPTION, bindingResult.getFieldErrors());
+        return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(ErrorCode.BINDING_EXCEPTION.getStatus()));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
-        ErrorResponse response = new ErrorResponse(ErrorCode.LOGIN_INPUT_INVALID);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    @ExceptionHandler(LoginInputInvalidException.class)
+    public ResponseEntity<ErrorResponse> handleLoginInputInvalidException(LoginInputInvalidException exception) {
+        ErrorResponse response = new ErrorResponse(ErrorCode.LOGIN_INPUT_INVALID, exception.getFieldErrors());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ErrorCode.LOGIN_INPUT_INVALID.getStatus()));
+    }
+
+    @ExceptionHandler(PasswordIncorrectException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(PasswordIncorrectException exception) {
+        ErrorResponse response = new ErrorResponse(ErrorCode.PASSWORD_INCORRECT, exception.getFieldErrors());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ErrorCode.PASSWORD_INCORRECT.getStatus()));
     }
 
 }

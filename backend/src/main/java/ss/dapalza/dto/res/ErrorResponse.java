@@ -1,11 +1,10 @@
 package ss.dapalza.dto.res;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.FieldError;
-import ss.dapalza.dto.code.ErrorCode;
+import ss.dapalza.common.exception.ErrorCode;
 
 import java.util.List;
 

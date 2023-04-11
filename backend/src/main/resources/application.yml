@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prod
+    active: local
 server:
   port: 8082
 ---
@@ -38,7 +38,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/dapalzadb?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
     username: root
-    password: 1234
+    password: 1121
   jpa:
     show-sql: true
     hibernate:

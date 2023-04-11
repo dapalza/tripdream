@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +39,11 @@ public class LoginController {
             @ApiResponse(code = 400, message = "못 찾음", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "서버 오류", response = ErrorResponse.class)
     })
-    public ResponseEntity<LoginResponse> signInRest(@Validated @RequestBody Customer customerT, BindingResult bindingResult) {
+    public ResponseEntity<LoginResponse> signInRest(@Validated @RequestBody Customer customerT, BindingResult bindingResult) throws BindException {
+
+        if(bindingResult.hasErrors()) {
+            throw new LoginInputInvalidException(bindingResult);
+        }
 
         Customer customer = loginService.login(customerT);
         LoginEvent le = new LoginEvent(customer);
@@ -51,7 +56,7 @@ public class LoginController {
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
         }
         else {
-            throw new LoginInputInvalidException();
+            throw new LoginInputInvalidException(bindingResult);
         }
     }
 }
