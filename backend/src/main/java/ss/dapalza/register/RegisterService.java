@@ -33,7 +33,7 @@ public class RegisterService {
         return passwordEncoder.encode(pw);
     }
 
-    public boolean checkPassword(String pw, String ex_pw) {
-        return passwordEncoder.matches(pw, ex_pw);
-    }
+    // public boolean checkPassword(String pw, String ex_pw) {
+    //     return passwordEncoder.matches(pw, ex_pw);
+    // }
 }

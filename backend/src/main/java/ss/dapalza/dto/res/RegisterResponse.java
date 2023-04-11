@@ -4,16 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import ss.dapalza.entity.Customer;
 
-import javax.persistence.Column;
 import java.time.LocalDateTime;
 
 @Getter
+@AllArgsConstructor
 public class RegisterResponse {
     private String no;
 
     private String email;
 
-    private String pw;
+    private String password;
 
     private String nick;
 
@@ -32,7 +32,7 @@ public class RegisterResponse {
     public RegisterResponse(Customer customer) {
         this.no = customer.getNo();;
         this.email = customer.getEmail();
-        this.pw = customer.getPw();
+        this.password = customer.getPassword();
         this.nick = customer.getNick();
         this.dob = customer.getDob();
         this.height = customer.getHeight();

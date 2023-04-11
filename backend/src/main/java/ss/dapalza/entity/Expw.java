@@ -1,5 +1,6 @@
 package ss.dapalza.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @Getter
+@AllArgsConstructor
 public class Expw {
 
     @OneToOne(mappedBy = "expw")

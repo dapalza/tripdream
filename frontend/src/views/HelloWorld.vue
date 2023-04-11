@@ -1,29 +1,25 @@
 <template>
-  <!-- <CommonHead></CommonHead> -->
   <v-container>
   </v-container>
-  <!-- <router-view></router-view> -->
   <header>MainPage</header>
+  <button style="margin: 10px;padding: 7px;border-radius: 10px; background-color: brown;" @click="localSwager">local</button>
+  <button style="margin: 10px;padding: 7px;border-radius: 10px; background-color: aqua;" @click="fleescape">fleescape</button>
 </template>
 
 <script>
-// import CommonHead from '../area/common-head.vue';
-import axios from 'axios';
 export default {
   name: "HelloWorld",
   setup() {
-    axios.get("http://localhost:8088/", { withCredentials: true }).then(res => {
-      console.log(res);
-    }).catch(err => {
-      if(err)
-        console.log(err +"!");
-    });
-    axios.post("http://localhost:8088/common", { "code_cg": "ADR", "code_dp": "6" }).then(res => {
-      console.log(res);
-    }).catch(err => {
-      if(err)
-        console.log(err +"?");
-    });
+    const localSwager = ()=>{
+      console.log("local move");
+      window.open("http://localhost:8082/swagger-ui/index.html");
+    }
+    const fleescape = () =>{
+      console.log("fleescape");
+      window.open("http://fleescape.shop:8082/swagger-ui/index.html");
+    }
+
+    return {localSwager, fleescape};
   },
   data: () => ({
     ecosystem: [],
@@ -31,7 +27,6 @@ export default {
     whatsNext: [],
   }),
   components:{
-    // CommonHead,
   },
 }
 </script>

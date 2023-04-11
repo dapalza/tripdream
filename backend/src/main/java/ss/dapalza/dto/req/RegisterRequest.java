@@ -1,13 +1,16 @@
 package ss.dapalza.dto.req;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+// import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class RegisterRequest {
+    @ApiModelProperty(value = "abc@email.com")
     private String email;
 
     private String password;
@@ -21,13 +24,13 @@ public class RegisterRequest {
     private int feet;
 
 
-    @Builder
-    public RegisterRequest(String email, String password, String username, String dob, int height, int feet) {
-        this.email = email;
-        this.password = password;
-        this.username = username;
-        this.dob = dob;
-        this.height = height;
-        this.feet = feet;
-    }
+    // @Builder
+    // public RegisterRequest(String email, String password, String username, String dob, int height, int feet) {
+    //     this.email = email;
+    //     this.password = password;
+    //     this.username = username;
+    //     this.dob = dob;
+    //     this.height = height;
+    //     this.feet = feet;
+    // }
 }
