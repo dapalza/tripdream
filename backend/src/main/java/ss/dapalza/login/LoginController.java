@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,7 @@ public class LoginController {
 
 
     @PostMapping(value="/signIn")
+    // @CrossOrigin(origins = {"http://localhost:8084"}, allowedHeaders = {"Authorization"})
     @Operation(summary = "로그인", description = "/api/signIn으로 요청")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "성공", response = LoginResponse.class),
