@@ -32,29 +32,29 @@ public class Customer {
     private String password;
 
     @Column(name = "customer_nick")
-    @NotBlank
+    // @NotBlank
     private String nick;
 
     @Column(name = "customer_dob")
-    @NotBlank
+    // @NotBlank
     private String dob;
 
     @Column(name = "customer_height")
-    @NotNull
-    @Range(min = 50, max = 300)
+    // @NotNull
+    // @Range(min = 50, max = 300)
     private int height;
 
     @Column(name = "customer_feet")
-    @NotNull
-    @Range(min = 1, max = 500)
+    // @NotNull
+    // @Range(min = 1, max = 500)
     private int feet;
 
     @Column(name = "customer_regdate")
-    @NotNull
+    // @NotNull
     private LocalDateTime regdate;
 
     @Column(name = "customer_updatedate")
-    @NotNull
+    // @NotNull
     private LocalDateTime updatedate;
 
     @Column(name = "customer_resigndate")

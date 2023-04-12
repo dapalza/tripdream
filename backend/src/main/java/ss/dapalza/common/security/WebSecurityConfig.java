@@ -23,6 +23,7 @@ public class WebSecurityConfig{
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/register").permitAll()
+                .antMatchers("/api/signIn").permitAll()
               //  .antMatchers("/api/signIn").permitAll()
                 .anyRequest().permitAll();
 //                .formLogin().disable()
