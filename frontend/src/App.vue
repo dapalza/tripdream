@@ -1,30 +1,23 @@
 <template>
   <v-app>
-    <!-- 로그인시 re-render작업이 안되어 로그인 반영이 안됨
-    새로고침을 해주는 방법이 있으나 아니다 싶음
-    re-render 방식을 좀 더 공부해 보고 재도전 -->
-    <!-- <CommonHead></CommonHead> -->
     <v-main>
-      <router-view></router-view>
+      <!-- <PageBook/> -->
+      <ScrollingTest/>
     </v-main>
-    <!-- <CommonFoot></CommonFoot> -->
   </v-app>
-
-  <!-- <TeleoportExample></TeleoportExample> -->
 </template>
 
 <script>
-// import CommonHead from './area/common-head.vue';
-// import CommonFoot from './area/common-foot.vue';
-// import TeleoportExample from './teleport/TeleoportExample.vue';
+// import HelloWorld from './components/HelloWorld.vue'
+// import PageBook from './components/PageBook.vue'
+import ScrollingTest from './components/ScrollingTest.vue'
 
 export default {
   name: 'App',
 
   components: {
-    // CommonHead,
-    // CommonFoot,
-    // TeleoportExample
+    // HelloWorld,
+    ScrollingTest,
   },
 
   data: () => ({
@@ -32,14 +25,20 @@ export default {
   }),
 }
 </script>
-
 <style>
-a{
-  cursor: pointer;
-    text-decoration: none;
-    color: black;
-
+/* 수직 스크롤바 숨기기 */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
+/* 수평 스크롤바 숨기기 */
+::-webkit-scrollbar-horizontal {
+  display: none;
+}
 
+/* 수직 스크롤바 숨기기 */
+::-webkit-scrollbar-vertical {
+  display: none;
+}
 </style>

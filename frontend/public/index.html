@@ -6,13 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title><%= htmlWebpackPlugin.options.title %></title>
-    <script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
-    <!-- <script src="https://developers.kakao.com/sdk/js/kakao.js"></script> -->
-    <!-- <script src="https://t1.kakaocdn.net/kakao_js_sdk/${VERSION}/kakao.min.js" integrity="${INTEGRITY_VALUE}" crossorigin="anonymous"></script> -->
-    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.1.0/kakao.min.js" 
-      integrity="sha384-dpu02ieKC6NUeKFoGMOKz6102CLEWi9+5RQjWSV0ikYSFFd8M3Wp2reIcquJOemx"
-      crossorigin="anonymous"></script>
-    
+    <link rel="stylesheet" href="map.css" />
   </head>
   <body>
     <noscript>
@@ -20,8 +14,9 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
-    <!-- vue3 모달 관리 부분 시작-->
-    <div id="destination"></div>
-    <!-- vue3 모달 관리 부분 끝-->
+    <!-- 페이스북 로그인
+      <div id="fb-root"></div>
+      <script async defer crossorigin="anonymous" src="https://connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v16.0" nonce="o21f5xns"></script>
+    -->\
   </body>
 </html>
