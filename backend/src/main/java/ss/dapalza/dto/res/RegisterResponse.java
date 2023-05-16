@@ -2,43 +2,43 @@ package ss.dapalza.dto.res;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import ss.dapalza.entity.Customer;
+import ss.dapalza.entity.Member;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @AllArgsConstructor
 public class RegisterResponse {
-    private String no;
-
+    // 이메일
+    @NotBlank
     private String email;
 
+    // 비밀번호
+    @NotBlank
     private String password;
 
-    private String nick;
+    // 성별 = N - 빈값, M - 남자, F - 여자
+    private String gender;
 
-    private String dob;
+    // 생일 (yyyy-MM-dd)
+    private Date birth;
 
-    private int height;
+    // 계정 잠금 여부
+    @NotBlank
+    private boolean locked;
 
-    private int feet;
+    // 닉네임 (중복 없음)
+    private String nickname;
 
-    private LocalDateTime regdate;
+    // 탈퇴 날짜
+    private LocalDateTime resigned_date;
 
-    private LocalDateTime updatedate;
-
-    private LocalDateTime resigndate;
-
-    public RegisterResponse(Customer customer) {
-        this.no = customer.getNo();;
-        this.email = customer.getEmail();
-        this.password = customer.getPassword();
-        this.nick = customer.getNick();
-        this.dob = customer.getDob();
-        this.height = customer.getHeight();
-        this.feet = customer.getFeet();
-        this.regdate = customer.getRegdate();
-        this.updatedate = customer.getUpdatedate();
-        this.resigndate = customer.getResigndate();
+    public RegisterResponse(Member member) {
+        this.email = member.getEmail();
+        this.password = member.getPassword();
+        this.nickname = member.getNickname();
+        this.birth = member.getBirth();
     }
 }

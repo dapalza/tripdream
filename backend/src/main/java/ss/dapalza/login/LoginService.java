@@ -2,13 +2,14 @@ package ss.dapalza.login;
 
 
 import lombok.RequiredArgsConstructor;
-import ss.dapalza.dto.login.LoginToken;
-import ss.dapalza.entity.Customer;
-import ss.dapalza.entity.DPZToken;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import ss.dapalza.common.exception.ValidCheckException;
+import ss.dapalza.dto.login.LoginToken;
+import ss.dapalza.dto.req.LoginRequest;
+import ss.dapalza.entity.DPZToken;
+import ss.dapalza.entity.Member;
 
 @Service
 @RequiredArgsConstructor
@@ -17,19 +18,17 @@ public class LoginService{
     private final TokenRepository tokenRep;
     private final LoginRepository loginRepository;
 
-    public Customer login(Customer customer){
+    public Member login(LoginRequest loginRequest, BindingResult bindingResult) throws ValidCheckException {
 
-        Customer findCustomer = loginRepository.findByEmail(customer.getEmail());
+        Member member = loginRepository.findByEmail(loginRequest.getEmail());
 
-        if(findCustomer == null){
-            System.out.println("해당 이메일을 가진 유저는 없습니다.");
-            return null;
+        if(member == null){
+            throw new ValidCheckException(bindingResult);
         }
-        if(!checkPassword(customer.getPassword(),findCustomer.getPassword())){
-            System.out.println("패스워드가 틀립니다.");
-            return null;
+        if(!checkPassword(loginRequest.getPassword(),member.getPassword())){
+            throw new ValidCheckException(bindingResult);
         }
-        return findCustomer;
+        return member;
     }
 
     private final PasswordEncoder passwordEncoder;

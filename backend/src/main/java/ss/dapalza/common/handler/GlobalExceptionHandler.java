@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ss.dapalza.common.exception.ErrorCode;
 import ss.dapalza.common.exception.LoginInputInvalidException;
 import ss.dapalza.common.exception.PasswordIncorrectException;
+import ss.dapalza.common.exception.ValidCheckException;
 import ss.dapalza.dto.res.ErrorResponse;
 
 @RestControllerAdvice
@@ -21,6 +22,12 @@ public class GlobalExceptionHandler {
         BindingResult bindingResult = be.getBindingResult();
         ErrorResponse errorResponse = new ErrorResponse(ErrorCode.BINDING_EXCEPTION, bindingResult.getFieldErrors());
         return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(ErrorCode.BINDING_EXCEPTION.getStatus()));
+    }
+
+    @ExceptionHandler(ValidCheckException.class)
+    public ResponseEntity<ErrorResponse> handleValidCheckException(ValidCheckException exception) {
+        ErrorResponse response = new ErrorResponse(ErrorCode.LOGIN_INPUT_INVALID, exception.getFieldErrors());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ErrorCode.LOGIN_INPUT_INVALID.getStatus()));
     }
 
     @ExceptionHandler(LoginInputInvalidException.class)

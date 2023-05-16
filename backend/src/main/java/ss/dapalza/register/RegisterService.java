@@ -1,31 +1,22 @@
 package ss.dapalza.register;
 
 import lombok.RequiredArgsConstructor;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ss.dapalza.dto.req.RegisterRequest;
-import ss.dapalza.dto.res.RegisterResponse;
-import ss.dapalza.entity.Customer;
-import ss.dapalza.entity.Expw;
-
-import java.util.Map;
+import ss.dapalza.entity.Member;
 
 @Service
 @RequiredArgsConstructor
 public class RegisterService {
 
     private final RegisterRepository repository;
-    private final ExPwRepository exRepo;
     private final PasswordEncoder passwordEncoder;
 
-    public Customer registerCustomer(RegisterRequest req) {
+    public Member registerCustomer(RegisterRequest req) {
         String h_pw = hashPassword(req.getPassword());
-        Customer customer = new Customer(req, h_pw);
-        Expw expw = new Expw(req.getPassword(), customer);
-        Customer result = repository.save(customer);
-        exRepo.save(expw);
+        Member member = new Member(req, h_pw);
+        Member result = repository.save(member);
         return result;
     }
 

@@ -18,7 +18,9 @@ public enum ErrorCode {
 
     // login
     LOGIN_INPUT_INVALID(400, "M002", "회원정보가 없습니다."),
-    PASSWORD_INCORRECT(400, "M003", "비밀번호가 틀렸습니다.")
+
+    EMAIL_NOT_FOUND(400, "M003", "없는 이메일입니다."),
+    PASSWORD_INCORRECT(400, "M004", "비밀번호가 틀렸습니다.")
 
     ;
 

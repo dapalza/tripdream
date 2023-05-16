@@ -3,34 +3,38 @@ package ss.dapalza.dto.req;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 // import lombok.Builder;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import java.util.Date;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class RegisterRequest {
-    @ApiModelProperty(value = "abc@email.com")
+    // 이메일
+    @NotBlank
     private String email;
 
+    // 비밀번호
+    @NotBlank
     private String password;
 
-    private String username;
+    // 성별 = N - 빈값, M - 남자, F - 여자
+    private String gender;
 
-    private String dob;
+    // 생일 (yyyy-MM-dd)
+    private Date birth;
 
-    private int height;
+    // 계정 잠금 여부
+    @NotBlank
+    private String locked;
 
-    private int feet;
+    // 닉네임 (중복 없음)
+    private String nickname;
 
-
-    // @Builder
-    // public RegisterRequest(String email, String password, String username, String dob, int height, int feet) {
-    //     this.email = email;
-    //     this.password = password;
-    //     this.username = username;
-    //     this.dob = dob;
-    //     this.height = height;
-    //     this.feet = feet;
-    // }
 }

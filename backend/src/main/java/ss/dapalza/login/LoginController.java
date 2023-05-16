@@ -10,19 +10,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ss.dapalza.common.exception.LoginInputInvalidException;
-import ss.dapalza.dto.login.LoginEvent;
-import ss.dapalza.dto.login.LoginInfo;
 import ss.dapalza.dto.login.LoginToken;
+import ss.dapalza.dto.req.LoginRequest;
 import ss.dapalza.dto.res.ErrorResponse;
 import ss.dapalza.dto.res.LoginResponse;
-import ss.dapalza.entity.Customer;
 import ss.dapalza.entity.DPZToken;
+import ss.dapalza.entity.Member;
 
 @Slf4j
 @RestController
@@ -41,20 +39,19 @@ public class LoginController {
             @ApiResponse(code = 400, message = "못 찾음", response = ErrorResponse.class),
             @ApiResponse(code = 500, message = "서버 오류", response = ErrorResponse.class)
     })
-    public ResponseEntity<LoginResponse> signInRest(@Validated @RequestBody Customer customerT, BindingResult bindingResult) throws BindException {
+    public ResponseEntity<LoginResponse> signInRest(@Validated @RequestBody LoginRequest loginRequest, BindingResult bindingResult) throws BindException {
 
+        // 유효성 검사 체크
         if(bindingResult.hasErrors()) {
             throw new LoginInputInvalidException(bindingResult);
         }
 
-        Customer customer = loginService.login(customerT);
-        LoginEvent le = new LoginEvent(customer);
-        LoginInfo li = new LoginInfo(customer);
+        Member member = loginService.login(loginRequest, bindingResult);
         LoginToken lt = new LoginToken();
-        DPZToken token = loginService.makeToken(customer.getNo(),lt);
+        DPZToken token = loginService.makeToken(member.getId(),lt);
 
         if(token.getIsUse()){
-            LoginResponse loginResponse = new LoginResponse(le, li, lt, 200);
+            LoginResponse loginResponse = new LoginResponse(lt, 200);
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
         }
         else {
