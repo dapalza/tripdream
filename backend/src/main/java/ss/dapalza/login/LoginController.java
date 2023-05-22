@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ss.dapalza.common.exception.ErrorCode;
 import ss.dapalza.common.exception.LoginInputInvalidException;
+import ss.dapalza.common.exception.ValidCheckException;
 import ss.dapalza.dto.login.LoginToken;
 import ss.dapalza.dto.req.LoginRequest;
 import ss.dapalza.dto.res.ErrorResponse;
@@ -43,7 +45,8 @@ public class LoginController {
 
         // 유효성 검사 체크
         if(bindingResult.hasErrors()) {
-            throw new LoginInputInvalidException(bindingResult);
+            log.info("what binding error = {}", bindingResult.getFieldErrors());
+            throw new ValidCheckException(bindingResult, ErrorCode.VALID_EXCEPTION);
         }
 
         Member member = loginService.login(loginRequest, bindingResult);
@@ -55,7 +58,7 @@ public class LoginController {
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
         }
         else {
-            throw new LoginInputInvalidException(bindingResult);
+            throw new LoginInputInvalidException(bindingResult, ErrorCode.LOGIN_INPUT_INVALID);
         }
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ss.dapalza.common.exception.ErrorCode;
 import ss.dapalza.common.exception.LoginInputInvalidException;
 import ss.dapalza.dto.req.RegisterRequest;
 import ss.dapalza.dto.res.ErrorResponse;
@@ -30,14 +31,14 @@ public class RegisterController {
     })
     public ResponseEntity<RegisterResponse> register(@RequestBody @Validated RegisterRequest req, BindingResult bindingResult) throws LoginInputInvalidException {
         if(req.getPassword() == null) {
-            throw new LoginInputInvalidException(bindingResult);
+            throw new LoginInputInvalidException(bindingResult, ErrorCode.LOGIN_INPUT_INVALID);
         }
         RegisterResponse res = new RegisterResponse(service.registerCustomer(req));
 
        if(res != null) {
            return new ResponseEntity<>(res, HttpStatus.OK);
        } else {
-           throw new LoginInputInvalidException(bindingResult);
+           throw new LoginInputInvalidException(bindingResult, ErrorCode.LOGIN_INPUT_INVALID);
        }
 
    }

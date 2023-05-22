@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
+import ss.dapalza.common.exception.ErrorCode;
+import ss.dapalza.common.exception.MemberNotFoundException;
+import ss.dapalza.common.exception.PasswordIncorrectException;
 import ss.dapalza.common.exception.ValidCheckException;
 import ss.dapalza.dto.login.LoginToken;
 import ss.dapalza.dto.req.LoginRequest;
@@ -23,10 +26,10 @@ public class LoginService{
         Member member = loginRepository.findByEmail(loginRequest.getEmail());
 
         if(member == null){
-            throw new ValidCheckException(bindingResult);
+            throw new MemberNotFoundException(bindingResult, ErrorCode.MEMBER_NOT_FOUND);
         }
         if(!checkPassword(loginRequest.getPassword(),member.getPassword())){
-            throw new ValidCheckException(bindingResult);
+            throw new PasswordIncorrectException(bindingResult, ErrorCode.PASSWORD_INCORRECT);
         }
         return member;
     }
