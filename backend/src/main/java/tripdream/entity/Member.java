@@ -1,20 +1,27 @@
 package tripdream.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import tripdream.dto.login.LoginToken;
 import tripdream.dto.req.RegisterRequest;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
-@NoArgsConstructor
-public class Member extends CommonTimeEntity{
+public class Member extends CommonTimeEntity implements UserDetails {
 
     @Id
     @Column(name = "member_id")
@@ -52,6 +59,10 @@ public class Member extends CommonTimeEntity{
     @JoinColumn(name = "token_id")
     private MemberToken memberToken;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
+
     public Member(RegisterRequest req, String h_pw) {
         this.email = req.getEmail();
         this.password = h_pw;
@@ -61,7 +72,48 @@ public class Member extends CommonTimeEntity{
         this.nickname = req.getNickname();
     }
 
+    public Member() {
+
+    }
+
     public void setMemberToken(LoginToken loginToken) {
         this.memberToken.setMemberToken(loginToken);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
