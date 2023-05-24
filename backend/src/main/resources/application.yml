@@ -24,6 +24,12 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+jwt:
+  header:
+    Authorization
+  secret:
+    QfTjWnZr4u7x!A%D*G-KaPdRgUkXp2s5v8y/B?E(H+MbQeThVmYq3t6w9z$C&F)J
+  access-token-validity-in-seconds: 60 * 10 # 10 min
 --- # devdb
 spring:
   config:
