@@ -34,16 +34,16 @@
                 <v-btn style="background-color: #d1eff0;">이메일/비밀번호 찾기</v-btn>
             </v-row>
             <v-row class="socal-login-btn-area">
-                <div class="socal-login-btn">
+                <div class="socal-login-btn" @click="goKakaoLogin()">
                     <img :src="require('../../assets/common/social/kakaoLogin.png')"/>
                 </div>
-                <div class="socal-login-btn">
+                <div class="socal-login-btn" @click="goGoogleLogin()">
                 <img
                 :src="require('../../assets/common/social/googleLogin.png')"
                 />
                 </div>
                 <div style="height: 50px; width: 200px; margin: 0 auto;
-    border-radius: 5px;display: flex; background-color: #03C75A;">
+    border-radius: 5px;display: flex; background-color: #03C75A;" @click="goNaverLogin()">
                     <img
                     :src="require('../../assets/common/social/naverIcon.png')"
                     class = "social-naver-btn"/>
@@ -75,6 +75,15 @@ const doLogin = () =>{
 }
 const goRegist = () =>{
     router.replace('/regist')
+}
+const goKakaoLogin = () =>{
+    console.log("kakaoLogin")
+}
+const goGoogleLogin = () =>{
+    console.log("googleLogin")
+}
+const goNaverLogin = () =>{
+    console.log("NaverLogin")
 }
 
 </script>
@@ -118,7 +127,7 @@ const goRegist = () =>{
     width:100%;
     margin: 5%;
     height: 100%;
-    background-color: #362f2f11;
+    background-color: #b1ababe1;
     border-radius: 20px;
 }
 
