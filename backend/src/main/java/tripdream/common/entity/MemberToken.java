@@ -1,4 +1,4 @@
-package tripdream.entity;
+package tripdream.common.entity;
 
 import javax.persistence.*;
 
@@ -6,7 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import tripdream.dto.login.LoginToken;
+import tripdream.common.dto.login.LoginToken;
 
 @Entity
 @Getter

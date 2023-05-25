@@ -1,10 +1,10 @@
-package tripdream.dto.res;
+package tripdream.common.dto.res;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import tripdream.dto.login.LoginToken;
-import tripdream.entity.Member;
-import tripdream.entity.MemberToken;
+import tripdream.common.dto.login.LoginToken;
+import tripdream.common.entity.Member;
+import tripdream.common.entity.MemberToken;
 
 import java.time.LocalDateTime;
 

@@ -1,14 +1,14 @@
-package tripdream.entity;
+package tripdream.common.entity;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import tripdream.dto.login.LoginToken;
-import tripdream.dto.req.RegisterRequest;
+import tripdream.common.dto.login.LoginToken;
+import tripdream.common.dto.req.RegisterRequest;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -42,6 +42,7 @@ public class Member extends CommonTimeEntity implements UserDetails {
     private String gender;
 
     // 생일 (yyyy-MM-dd)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birth;
 
     // 계정 잠금 여부

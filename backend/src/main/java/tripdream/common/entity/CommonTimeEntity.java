@@ -1,4 +1,4 @@
-package tripdream.entity;
+package tripdream.common.entity;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

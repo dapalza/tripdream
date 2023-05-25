@@ -1,30 +1,30 @@
 package tripdream.register;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import tripdream.dto.req.RegisterRequest;
-import tripdream.entity.Member;
+import org.springframework.web.bind.annotation.RequestBody;
+import tripdream.common.dao.MemberRepository;
+import tripdream.common.entity.Member;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RegisterService {
 
-    private final RegisterRepository repository;
+    private final MemberRepository repository;
     private final PasswordEncoder passwordEncoder;
 
-    public Member registerCustomer(RegisterRequest req) {
-        String h_pw = hashPassword(req.getPassword());
-        Member member = new Member(req, h_pw);
-        Member result = repository.save(member);
-        return result;
+    public Member registerCustomer(Member member) {
+        Member savedMember = repository.save(member);
+        log.info("member created at = {}", savedMember.getCreatedAt());
+        log.info("member modified at = {}", savedMember.getLastModifiedAt());
+        return savedMember;
     }
 
     public String hashPassword(String pw) {
         return passwordEncoder.encode(pw);
     }
 
-    // public boolean checkPassword(String pw, String ex_pw) {
-    //     return passwordEncoder.matches(pw, ex_pw);
-    // }
 }

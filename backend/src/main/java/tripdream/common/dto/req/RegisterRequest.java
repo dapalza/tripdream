@@ -1,4 +1,4 @@
-package tripdream.dto.req;
+package tripdream.common.dto.req;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

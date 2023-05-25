@@ -1,4 +1,4 @@
-package tripdream.dto.login;
+package tripdream.common.dto.login;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

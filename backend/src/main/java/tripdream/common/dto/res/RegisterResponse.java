@@ -1,8 +1,9 @@
-package tripdream.dto.res;
+package tripdream.common.dto.res;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import tripdream.entity.Member;
+import org.springframework.format.annotation.DateTimeFormat;
+import tripdream.common.entity.Member;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ public class RegisterResponse {
     private String gender;
 
     // 생일 (yyyy-MM-dd)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birth;
 
     // 계정 잠금 여부
@@ -36,15 +38,18 @@ public class RegisterResponse {
     private LocalDateTime resigned_date;
 
     // 생성 날짜
-    private LocalDateTime createdDate;
+    private LocalDateTime createdAt;
 
     // 수정 날짜
-    private LocalDateTime lastModifiedDate;
+    private LocalDateTime lastModifiedAt;
 
     public RegisterResponse(Member member) {
         this.email = member.getEmail();
         this.password = member.getPassword();
         this.nickname = member.getNickname();
         this.birth = member.getBirth();
+        this.gender = member.getGender();
+        this.createdAt = member.getCreatedAt();
+        this.lastModifiedAt = member.getLastModifiedAt();
     }
 }

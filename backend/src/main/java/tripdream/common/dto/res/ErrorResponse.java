@@ -1,4 +1,4 @@
-package tripdream.dto.res;
+package tripdream.common.dto.res;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

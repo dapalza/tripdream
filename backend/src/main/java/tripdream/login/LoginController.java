@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import tripdream.common.exception.ErrorCode;
 import tripdream.common.exception.LoginInputInvalidException;
 import tripdream.common.exception.ValidCheckException;
-import tripdream.dto.req.LoginRequest;
-import tripdream.dto.res.ErrorResponse;
-import tripdream.dto.res.LoginResponse;
-import tripdream.entity.MemberToken;
-import tripdream.entity.Member;
+import tripdream.common.dto.req.LoginRequest;
+import tripdream.common.dto.res.ErrorResponse;
+import tripdream.common.dto.res.LoginResponse;
+import tripdream.common.entity.MemberToken;
+import tripdream.common.entity.Member;
 
 @Slf4j
 @RestController

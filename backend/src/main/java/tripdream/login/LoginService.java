@@ -9,21 +9,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import tripdream.common.dao.MemberRepository;
 import tripdream.common.exception.ErrorCode;
 import tripdream.common.exception.MemberNotFoundException;
 import tripdream.common.exception.PasswordIncorrectException;
 import tripdream.common.exception.ValidCheckException;
 import tripdream.common.util.JwtTokenProvider;
-import tripdream.dto.login.LoginToken;
-import tripdream.dto.req.LoginRequest;
-import tripdream.entity.Member;
+import tripdream.common.dto.login.LoginToken;
+import tripdream.common.dto.req.LoginRequest;
+import tripdream.common.entity.Member;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class LoginService{
 
-    private final LoginRepository loginRepository;
+    private final MemberRepository memberRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -40,7 +41,7 @@ public class LoginService{
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         LoginToken loginToken = jwtTokenProvider.generateToken(authentication);
 
-        Member member = loginRepository.findByEmail(loginRequest.getEmail());
+        Member member = memberRepository.findByEmail(loginRequest.getEmail());
 
         // 이메일에 해당되는 사용자 없음
         if(member == null){

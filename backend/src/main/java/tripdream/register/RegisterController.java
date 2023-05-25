@@ -9,11 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import tripdream.common.entity.Member;
 import tripdream.common.exception.ErrorCode;
 import tripdream.common.exception.LoginInputInvalidException;
-import tripdream.dto.req.RegisterRequest;
-import tripdream.dto.res.ErrorResponse;
-import tripdream.dto.res.RegisterResponse;
+import tripdream.common.dto.req.RegisterRequest;
+import tripdream.common.dto.res.ErrorResponse;
+import tripdream.common.dto.res.RegisterResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,11 +30,11 @@ public class RegisterController {
             @ApiResponse(code = 200, message = "성공", response = RegisterResponse.class),
             @ApiResponse(code = 500, message = "서버 오류", response = ErrorResponse.class)
     })
-    public ResponseEntity<RegisterResponse> register(@RequestBody @Validated RegisterRequest req, BindingResult bindingResult) throws LoginInputInvalidException {
-        if(req.getPassword() == null) {
+    public ResponseEntity<RegisterResponse> register(@RequestBody @Validated Member member, BindingResult bindingResult) throws LoginInputInvalidException {
+        if(member.getPassword() == null) {
             throw new LoginInputInvalidException(bindingResult, ErrorCode.LOGIN_INPUT_INVALID);
         }
-        RegisterResponse res = new RegisterResponse(service.registerCustomer(req));
+        RegisterResponse res = new RegisterResponse(service.registerCustomer(member));
 
        if(res != null) {
            return new ResponseEntity<>(res, HttpStatus.OK);
