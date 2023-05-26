@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tripdream.common.exception.ErrorCode;
-import tripdream.common.exception.LoginInputInvalidException;
-import tripdream.common.exception.ValidCheckException;
 import tripdream.common.dto.req.LoginRequest;
 import tripdream.common.dto.res.ErrorResponse;
 import tripdream.common.dto.res.LoginResponse;
-import tripdream.common.entity.MemberToken;
 import tripdream.common.entity.Member;
+import tripdream.common.entity.MemberToken;
+import tripdream.common.exception.ErrorCode;
+import tripdream.common.exception.MemberNotFoundException;
+import tripdream.common.exception.ValidCheckException;
 
 @Slf4j
 @RestController
@@ -50,7 +50,7 @@ public class LoginController {
 
         log.info("before login");
 
-        Member member = loginService.login(loginRequest, bindingResult);
+        Member member = loginService.login(loginRequest);
 
         log.info("after login");
         MemberToken token = member.getMemberToken();
@@ -62,7 +62,7 @@ public class LoginController {
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
         }
         else {
-            throw new LoginInputInvalidException(bindingResult, ErrorCode.LOGIN_INPUT_INVALID);
+            throw new MemberNotFoundException(ErrorCode.LOGIN_INPUT_INVALID);
         }
     }
 }

@@ -9,23 +9,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 import tripdream.common.dao.MemberRepository;
 import tripdream.common.dao.MemberTokenRepository;
+import tripdream.common.dto.req.LoginRequest;
+import tripdream.common.entity.Member;
 import tripdream.common.entity.MemberToken;
 import tripdream.common.exception.ErrorCode;
 import tripdream.common.exception.MemberNotFoundException;
-import tripdream.common.exception.ValidCheckException;
 import tripdream.common.util.JwtTokenProvider;
 import tripdream.common.vo.login.LoginToken;
-import tripdream.common.dto.req.LoginRequest;
-import tripdream.common.entity.Member;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +33,9 @@ public class LoginService implements UserDetailsService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public Member login(LoginRequest loginRequest, BindingResult bindingResult) throws ValidCheckException {
+    private final PasswordEncoder passwordEncoder;
+
+    public Member login(LoginRequest loginRequest) {
 
         log.info("create authentication object");
 
@@ -66,9 +63,7 @@ public class LoginService implements UserDetailsService {
         // 이메일에 해당되는 사용자
         Member member = memberRepository.findByEmail(loginRequest.getEmail()).get();
 
-        String id = member.getId();
-        log.info("member id = {}", id);
-        loginToken.giveMemberId(id);
+        loginToken.giveMemberId(member.getId());
 
         MemberToken memberToken = new MemberToken(loginToken);
         memberTokenRepository.save(memberToken);
@@ -77,18 +72,6 @@ public class LoginService implements UserDetailsService {
         return member;
     }
 
-    private final PasswordEncoder passwordEncoder;
-    public String hashPassword(String pw) {
-        return passwordEncoder.encode(pw);
-    }
-
-    public boolean checkPassword(String pw, String ex_pw) {
-        return passwordEncoder.matches(pw, ex_pw);
-    }
-
-    private Member getMember(Optional<Member> member) {
-        return member.get();
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) {

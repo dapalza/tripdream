@@ -13,6 +13,14 @@ import tripdream.common.dto.res.ErrorResponse;
 @Slf4j
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleUnknownException(Exception e) {
+        log.error("Unknown error = {}", e.toString());
+        ErrorCode errorCode = ErrorCode.BASIC_ERROR_CODE;
+        ErrorResponse response = new ErrorResponse(errorCode);
+        return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
+    }
+
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
         ErrorCode errorCode = e.getErrorCode();

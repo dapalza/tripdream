@@ -6,6 +6,8 @@ import lombok.Getter;
 public enum ErrorCode {
 
     // Common
+    BASIC_ERROR_CODE(500, "C000", "예외가 발생했습니다."),
+
     INVALID_INPUT_VALUE(400, "C001", "입력값이 틀렸습니다."),
     METHOD_NOT_ALLOWED(405, "C002", "Method Not Allowed"),
     HANDLE_ACCESS_DENIED(403, "C006", "접근이 거부되었습니다."),
