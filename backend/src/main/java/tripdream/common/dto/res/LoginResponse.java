@@ -2,7 +2,6 @@ package tripdream.common.dto.res;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import tripdream.common.dto.login.LoginToken;
 import tripdream.common.entity.Member;
 import tripdream.common.entity.MemberToken;
 
@@ -12,20 +11,16 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class LoginResponse {
 
-    private LoginToken lt;
+    private MemberToken memberToken;
 
-    // 생성 날짜
-    private LocalDateTime createdDate;
+    private String email;
 
-    // 수정 날짜
-    private LocalDateTime lastModifiedDate;
+    private String locked;
 
     public LoginResponse(Member member) {
-        MemberToken memberToken = member.getMemberToken();
-
-        this.lt = new LoginToken();
-        this.createdDate = member.getCreatedAt();
-        this.lastModifiedDate = member.getLastModifiedAt();
+        this.memberToken = member.getMemberToken();
+        this.email = member.getEmail();
+        this.locked = member.getLocked();
     }
 
 }

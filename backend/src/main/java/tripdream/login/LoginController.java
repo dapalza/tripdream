@@ -48,10 +48,16 @@ public class LoginController {
             throw new ValidCheckException(bindingResult, ErrorCode.VALID_EXCEPTION);
         }
 
+        log.info("before login");
+
         Member member = loginService.login(loginRequest, bindingResult);
+
+        log.info("after login");
         MemberToken token = member.getMemberToken();
 
-        if(token.getIsUse()){
+        log.info("token lets go = {}", token.getAccessToken());
+
+        if(token != null){
             LoginResponse loginResponse = new LoginResponse(member);
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
         }

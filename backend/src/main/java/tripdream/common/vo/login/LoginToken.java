@@ -1,4 +1,4 @@
-package tripdream.common.dto.login;
+package tripdream.common.vo.login;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,5 +18,13 @@ public class LoginToken {
     private String accessToken;
     // 장기 토큰
     private String refreshToken;
+
+    // 멤버 아이디
+    private String memberId;
+    
+    // 멤버 아이디 세팅
+    public void giveMemberId(String memberId) {
+        this.memberId = memberId;
+    }
 
 }

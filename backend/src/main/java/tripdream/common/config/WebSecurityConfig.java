@@ -21,15 +21,10 @@ public class WebSecurityConfig{
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     // JWT를 사용하기 위해서는 기본적으로 password encoder가 필요함.
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -44,7 +39,9 @@ public class WebSecurityConfig{
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                // 회원가입 요청은 로그인을 요구하지 않음
                 .antMatchers("/api/register").permitAll()
+                // 로그인 요청은 로그인을 요구하지 않음
                 .antMatchers("/api/signIn").permitAll()
                 .anyRequest().authenticated()
                 .and()

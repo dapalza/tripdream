@@ -13,7 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import tripdream.common.dto.login.LoginToken;
+import tripdream.common.vo.login.LoginToken;
 
 import java.security.Key;
 import java.util.Arrays;
@@ -44,6 +44,7 @@ public class JwtTokenProvider {
 
     // 유저 정보로 AccessToken, RefreshToken 생성
     public LoginToken generateToken(Authentication authentication) {
+        log.info("call generate token");
         String authorities = authentication
                 .getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -62,6 +63,9 @@ public class JwtTokenProvider {
                 .setExpiration(refreshTokenExpireAt)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+
+        log.info("accessToken info ={}", accessToken);
+        log.info("refreshToken info ={}", refreshToken);
 
         return LoginToken.builder()
                 .grantType("Bearer")

@@ -7,7 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import tripdream.common.dto.login.LoginToken;
+import tripdream.common.vo.login.LoginToken;
 import tripdream.common.dto.req.RegisterRequest;
 
 import javax.persistence.*;
@@ -64,21 +64,12 @@ public class Member extends CommonTimeEntity implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    public Member(RegisterRequest req, String h_pw) {
-        this.email = req.getEmail();
-        this.password = h_pw;
-        this.gender = req.getGender();
-        this.birth = req.getBirth();
-        this.locked = req.getLocked();
-        this.nickname = req.getNickname();
-    }
-
     public Member() {
 
     }
 
-    public void setMemberToken(LoginToken loginToken) {
-        this.memberToken.setMemberToken(loginToken);
+    public void changeMemberToken(MemberToken memberToken) {
+        this.memberToken = memberToken;
     }
 
     @Override

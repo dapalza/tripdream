@@ -6,7 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import tripdream.common.dto.login.LoginToken;
+import tripdream.common.vo.login.LoginToken;
 
 @Entity
 @Getter
@@ -18,9 +18,6 @@ public class MemberToken extends CommonTimeEntity{
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    private Member member;
     
     @Column(name = "access_token")
     private String accessToken;
@@ -31,11 +28,12 @@ public class MemberToken extends CommonTimeEntity{
     @Column(name = "is_use")
     private int isUse;
 
-    void setMemberToken(LoginToken lt){
-        this.accessToken= lt.getAccessToken();
-        this.refreshToken= lt.getRefreshToken();
+    public MemberToken(LoginToken loginToken) {
+        this.accessToken= loginToken.getAccessToken();
+        this.refreshToken= loginToken.getRefreshToken();
         this.isUse = 1;
     }
+
     public boolean getIsUse(){
         return this.isUse==1 ? true:false;
     }
