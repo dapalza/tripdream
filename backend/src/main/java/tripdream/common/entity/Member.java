@@ -1,5 +1,6 @@
 package tripdream.common.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
@@ -12,6 +13,8 @@ import tripdream.common.dto.req.RegisterRequest;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,7 +23,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
+@Table
 @Getter
+@AllArgsConstructor
+@Builder
 public class Member extends CommonTimeEntity implements UserDetails {
 
     @Id
@@ -31,22 +37,24 @@ public class Member extends CommonTimeEntity implements UserDetails {
 
     // 이메일
     @NotBlank
-    @Column(unique = true)
+    @NotNull
+    @Column(nullable = false)
     private String email;
 
     // 비밀번호
     @NotBlank
+    @NotNull
     private String password;
 
     // 성별 = N - 빈값, M - 남자, F - 여자
     private String gender;
 
     // 생일 (yyyy-MM-dd)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date birth;
+    private LocalDate birth;
 
     // 계정 잠금 여부
     @NotBlank
+    @NotNull
     private String locked;
 
     // 닉네임 (중복 없음)
@@ -60,7 +68,7 @@ public class Member extends CommonTimeEntity implements UserDetails {
     @JoinColumn(name = "token_id")
     private MemberToken memberToken;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
@@ -70,6 +78,11 @@ public class Member extends CommonTimeEntity implements UserDetails {
 
     public void changeMemberToken(MemberToken memberToken) {
         this.memberToken = memberToken;
+    }
+
+    // 비밀번호 암호화
+    public void hidePassword(String password) {
+        this.password = password;
     }
 
     @Override

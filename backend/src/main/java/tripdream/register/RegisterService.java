@@ -17,10 +17,15 @@ public class RegisterService {
     private final PasswordEncoder passwordEncoder;
 
     public Member registerCustomer(Member member) {
-        Member savedMember = repository.save(member);
-        log.info("member created at = {}", savedMember.getCreatedAt());
-        log.info("member modified at = {}", savedMember.getLastModifiedAt());
-        return savedMember;
+        log.info("hashing password start");
+
+        String hashPassword = hashPassword(member.getPassword());
+
+        member.hidePassword(hashPassword);
+
+        log.info("hashing password end");
+
+        return repository.save(member);
     }
 
     public String hashPassword(String pw) {

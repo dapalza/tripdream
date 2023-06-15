@@ -62,7 +62,7 @@ public class LoginController {
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
         }
         else {
-            throw new MemberNotFoundException(ErrorCode.LOGIN_INPUT_INVALID);
+            throw new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
         }
     }
 }

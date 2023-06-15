@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import tripdream.common.entity.Member;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -24,8 +25,7 @@ public class RegisterResponse {
     private String gender;
 
     // 생일 (yyyy-MM-dd)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date birth;
+    private LocalDate birth;
 
     // 계정 잠금 여부
     @NotBlank
