@@ -11,9 +11,11 @@
         <div style="width: 278px; height:274px;" class="common-border">
             <div class="common-border" style="width:175px; height: 225px;
     margin: 0 auto;">
+                <img v-bind:src="docfile" style="width:100%; height:100%">
             </div>
             <div style="display:flex; justify-content: center;">
-                <v-btn>사진 등록</v-btn>
+                <v-btn type="file" @click="tmpfn()">사진 등록</v-btn>
+                <input type="file" v-on:change="inputImg"/>
             </div>
         </div>
         <v-form class="regist-form" ref="form">
@@ -99,6 +101,7 @@ import { ko } from 'date-fns/locale';
 
 const locale=reactive(ko);
 const form = ref();
+const docfile= ref();
 // const router = useRouter();
 const customer = reactive({
     email: "",
@@ -126,6 +129,14 @@ const gender = ref([
         text:"Female",
     }
 ]);
+const tmpfn=()=>{
+    console.log(docfile);
+}
+const inputImg = (event) =>{
+    console.log(event);
+    var file= event.target.files[0];
+    docfile.value = window.URL.createObjectURL(file);
+}
 const emit = defineEmits(['pushRegist']);
 var Submit = () =>{
     var userInfo = ref({
