@@ -8,29 +8,35 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import tripdream.common.vo.login.LoginToken;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor
 public class MemberToken extends CommonTimeEntity{
     
     @Id
-    @Column(name = "token_id")
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-    
-    @Column(name = "access_token")
+
     private String accessToken;
 
-    @Column(name = "refresh_token")
     private String refreshToken;
 
-    @Column(name = "is_use")
     private int isUse;
+
+    // 일시 토큰 만료 시간
+    private LocalDateTime accessTokenExpireAt;
+
+    // 장기 토큰 만료 시간
+    private LocalDateTime refreshTokenExpireAt;
 
     public MemberToken(LoginToken loginToken) {
         this.accessToken= loginToken.getAccessToken();
         this.refreshToken= loginToken.getRefreshToken();
+        this.accessTokenExpireAt = loginToken.getAccessTokenExpireAt();
+        this.refreshTokenExpireAt = loginToken.getRefreshTokenExpireAt();
         this.isUse = 1;
     }
 

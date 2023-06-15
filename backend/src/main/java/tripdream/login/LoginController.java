@@ -32,9 +32,9 @@ public class LoginController {
     private final LoginService loginService;
 
 
-    @PostMapping(value="/signIn")
+    @PostMapping(value= "/login")
     // @CrossOrigin(origins = {"http://localhost:8084"}, allowedHeaders = {"Authorization"})
-    @Operation(summary = "로그인", description = "/api/signIn으로 요청")
+    @Operation(summary = "로그인", description = "/api/login으로 요청")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "성공", response = LoginResponse.class),
             @ApiResponse(code = 400, message = "못 찾음", response = ErrorResponse.class),

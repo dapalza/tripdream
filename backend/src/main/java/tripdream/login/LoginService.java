@@ -66,10 +66,9 @@ public class LoginService implements UserDetailsService {
         MemberToken memberToken = new MemberToken(loginToken);
         memberTokenRepository.save(memberToken);
         member.changeMemberToken(memberToken);
-
         return member;
-    }
 
+    }
 
     // 등록된 사용자 정보 탐색 (오버라이드)
     // .authenticate() 메소드 실행 시 해당 메소드가 실행됨.

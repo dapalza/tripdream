@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,6 +23,12 @@ public class LoginToken {
 
     // 멤버 아이디
     private String memberId;
+
+    // 일시 토큰 만료 시간
+    private LocalDateTime accessTokenExpireAt;
+
+    // 장기 토큰 만료 시간
+    private LocalDateTime refreshTokenExpireAt;
     
     // 멤버 아이디 세팅
     public void giveMemberId(String memberId) {

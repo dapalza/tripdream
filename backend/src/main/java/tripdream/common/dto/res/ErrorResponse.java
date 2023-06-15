@@ -13,9 +13,16 @@ import java.util.List;
 @AllArgsConstructor
 public class ErrorResponse {
 
+    // 문자열 에러 메시지
     private String message;
+    
+    // HTTP 상태코드
     private int status;
+    
+    // custom 예외를 제외한 기본 예외 묶음
     private List<FieldError> errors;
+    
+    // 자체 에러코드
     private String code;
 
     public ErrorResponse(ErrorCode errorCode) {

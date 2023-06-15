@@ -16,6 +16,9 @@ import org.springframework.stereotype.Component;
 import tripdream.common.vo.login.LoginToken;
 
 import java.security.Key;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -29,13 +32,16 @@ public class JwtTokenProvider {
     private final Key key;
 
     // 현재 시간
-    long now = (new Date()).getTime();
+    LocalDateTime localNow = LocalDateTime.now();
 
     // Access token 만료 시간 : 10분
-    final Date accessTokenExpireAt = new Date(now + 60 * 10 * 1000L);
+    final int accessTokenExpireLong = 10;
 
-    // Refresh token 만료 시간 : 6시간
-    final Date refreshTokenExpireAt = new Date(now + 60 * 60 * 6 * 1000L);
+    // Refresh token 만료 시간 : 60분
+    final int refreshTokenExpireLong = 60;
+
+    final Date accessTokenExpireAt = Timestamp.valueOf(localNow.plusMinutes(accessTokenExpireLong));
+    final Date refreshTokenExpireAt = Timestamp.valueOf(localNow.plusMinutes(refreshTokenExpireLong));
 
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -65,12 +71,17 @@ public class JwtTokenProvider {
                 .compact();
 
         log.info("accessToken info ={}", accessToken);
+        log.info("accessTokenExpireLong info ={}", accessTokenExpireLong);
+        log.info("accessTokenExpireAt info ={}", localNow.plusNanos(accessTokenExpireLong));
         log.info("refreshToken info ={}", refreshToken);
+        log.info("refreshTokenExpireAt info ={}", localNow.plusNanos(refreshTokenExpireLong));
 
         return LoginToken.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .accessTokenExpireAt(localNow.plusMinutes(accessTokenExpireLong))
+                .refreshTokenExpireAt(localNow.plusMinutes(refreshTokenExpireLong))
                 .build();
     }
 
