@@ -24,17 +24,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class LoginServiceTest implements UserDetailsService {
 
     @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
     MemberRepository memberRepository;
-
     @Autowired
     MemberTokenRepository memberTokenRepository;
-
     @Autowired
     AuthenticationManagerBuilder authenticationManagerBuilder;
-
     @Autowired
     JwtTokenProvider jwtTokenProvider;
 

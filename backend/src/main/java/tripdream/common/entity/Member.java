@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-@Table
 @Getter
 @AllArgsConstructor
 @Builder
@@ -58,7 +57,8 @@ public class Member extends CommonTimeEntity implements UserDetails {
     private String locked;
 
     // 닉네임 (중복 없음)
-    @Column(unique = true)
+    @NotBlank
+    @NotNull
     private String nickname;
 
     // 탈퇴 날짜

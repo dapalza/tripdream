@@ -34,15 +34,6 @@ class RegisterServiceTest{
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @Autowired
-    MemberRepository memberRepository;
-    @Autowired
-    MemberTokenRepository memberTokenRepository;
-    @Autowired
-    AuthenticationManagerBuilder authenticationManagerBuilder;
-    @Autowired
-    JwtTokenProvider jwtTokenProvider;
-
     @Test
     void hashPassword() {
         // given

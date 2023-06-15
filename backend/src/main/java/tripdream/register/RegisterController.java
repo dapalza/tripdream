@@ -31,9 +31,7 @@ public class RegisterController {
             @ApiResponse(code = 500, message = "서버 오류", response = ErrorResponse.class)
     })
     public ResponseEntity<RegisterResponse> register(@RequestBody @Validated Member member, BindingResult bindingResult) throws LoginInputInvalidException {
-        if(member.getPassword() == null) {
-            throw new LoginInputInvalidException(bindingResult, ErrorCode.LOGIN_INPUT_INVALID);
-        }
+
         RegisterResponse res = new RegisterResponse(service.registerCustomer(member));
 
        if(res != null) {
