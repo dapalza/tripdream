@@ -1,4 +1,4 @@
-# build stage
+# Build stage
 FROM node:lts-alpine as build-stage
 WORKDIR /app
 COPY package*.json ./
@@ -7,7 +7,7 @@ COPY . .
 RUN npm run build
 CMD ["npm", "run", "serve"]
 
-# production stage
+# Production stage
 FROM nginx:stable-alpine as production-stage
 RUN rm -rf /usr/share/nginx/html/*
 COPY --from=build-stage /app/dist /usr/share/nginx/html
