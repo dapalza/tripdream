@@ -18,7 +18,7 @@ import tripdream.common.dto.req.LoginRequest;
 import tripdream.common.dto.res.ErrorResponse;
 import tripdream.common.dto.res.LoginResponse;
 import tripdream.common.entity.Member;
-import tripdream.common.entity.MemberToken;
+import tripdream.common.entity.Token;
 import tripdream.common.exception.ErrorCode;
 import tripdream.common.exception.MemberNotFoundException;
 import tripdream.common.exception.ValidCheckException;
@@ -53,7 +53,7 @@ public class LoginController {
         Member member = loginService.login(loginRequest);
 
         log.info("after login");
-        MemberToken token = member.getMemberToken();
+        Token token = member.getToken();
 
         log.info("token lets go = {}", token.getAccessToken());
 

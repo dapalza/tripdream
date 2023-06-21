@@ -9,14 +9,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tripdream.common.dao.MemberRepository;
 import tripdream.common.dao.MemberTokenRepository;
 import tripdream.common.dto.req.LoginRequest;
 import tripdream.common.entity.Member;
-import tripdream.common.entity.MemberToken;
+import tripdream.common.entity.Token;
 import tripdream.common.exception.ErrorCode;
 import tripdream.common.exception.MemberNotFoundException;
 import tripdream.common.util.JwtTokenProvider;
@@ -63,9 +62,9 @@ public class LoginService implements UserDetailsService {
 
         loginToken.giveMemberId(member.getId());
 
-        MemberToken memberToken = new MemberToken(loginToken);
-        memberTokenRepository.save(memberToken);
-        member.changeMemberToken(memberToken);
+        Token token = new Token(loginToken);
+        memberTokenRepository.save(token);
+        member.changeMemberToken(token);
         return member;
 
     }

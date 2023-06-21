@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-public class MemberToken extends CommonTimeEntity{
+public class Token extends CommonTimeEntity{
     
     @Id
     @GeneratedValue(generator = "uuid")
@@ -24,7 +24,8 @@ public class MemberToken extends CommonTimeEntity{
 
     private String refreshToken;
 
-    private int isUse;
+    // 사용 여부 (만료 여부)
+    private char useYn;
 
     // 일시 토큰 만료 시간
     private LocalDateTime accessTokenExpireAt;
@@ -32,16 +33,12 @@ public class MemberToken extends CommonTimeEntity{
     // 장기 토큰 만료 시간
     private LocalDateTime refreshTokenExpireAt;
 
-    public MemberToken(LoginToken loginToken) {
+    public Token(LoginToken loginToken) {
         this.accessToken= loginToken.getAccessToken();
         this.refreshToken= loginToken.getRefreshToken();
         this.accessTokenExpireAt = loginToken.getAccessTokenExpireAt();
         this.refreshTokenExpireAt = loginToken.getRefreshTokenExpireAt();
-        this.isUse = 1;
-    }
-
-    public boolean getIsUse(){
-        return this.isUse==1 ? true:false;
+        this.useYn = 'Y';
     }
 
 }
