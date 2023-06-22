@@ -22,4 +22,5 @@ public class Budget {
     private String category;
 
     private long cost;
+
 }
