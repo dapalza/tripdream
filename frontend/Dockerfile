@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN npm run build
+RUN NODE_OPTIONS=--max_old_space_size=4096 npm run build
 CMD ["npm", "run", "serve"]
 
 # Production stage
