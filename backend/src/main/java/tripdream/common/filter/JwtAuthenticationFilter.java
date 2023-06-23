@@ -1,6 +1,7 @@
 package tripdream.common.filter;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -40,6 +42,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String bearerToken = request.getHeader("Authorization");
         // 토큰 맨 앞에 Bearer를 붙임
         if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
+            log.info("bearer token front = {}", bearerToken.substring(0, 7));
+            log.info("bearer token back = {}", bearerToken.substring(7));
             return bearerToken.substring(7);
         }
         return null;
