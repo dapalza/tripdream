@@ -6,7 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import tripdream.common.vo.login.LoginToken;
+import tripdream.common.vo.LoginToken;
 
 import java.time.LocalDateTime;
 

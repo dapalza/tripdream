@@ -8,15 +8,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import tripdream.common.dao.MemberRepository;
-import tripdream.common.dao.MemberTokenRepository;
+import tripdream.common.repository.MemberRepository;
+import tripdream.common.repository.MemberTokenRepository;
 import tripdream.common.dto.req.LoginRequest;
 import tripdream.common.entity.Member;
 import tripdream.common.entity.Token;
 import tripdream.common.exception.ErrorCode;
 import tripdream.common.exception.MemberNotFoundException;
 import tripdream.common.util.JwtTokenProvider;
-import tripdream.common.vo.login.LoginToken;
+import tripdream.common.vo.LoginToken;
 
 class LoginServiceTest implements UserDetailsService {
 

@@ -16,7 +16,7 @@ public class Plan {
     @Id
     @GeneratedValue
     @Column(name = "PLAN_ID")
-    private long id;
+    private Long id;
 
     // 여행 시작일
     @NotNull

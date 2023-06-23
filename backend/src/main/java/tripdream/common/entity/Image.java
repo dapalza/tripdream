@@ -17,7 +17,7 @@ public class Image {
     @Id
     @GeneratedValue
     @Column(name = "IMAGE_ID")
-    private long id;
+    private Long id;
 
     // 이미지 경로
     private String fullPath;

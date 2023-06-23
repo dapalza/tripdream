@@ -14,7 +14,7 @@ import java.util.List;
 public class Team {
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
 
     @OneToMany
     @JoinColumn(name = "MEMBER_ID")

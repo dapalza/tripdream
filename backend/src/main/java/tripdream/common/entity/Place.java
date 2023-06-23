@@ -16,7 +16,7 @@ public class Place {
     @Id
     @GeneratedValue
     @Column(name = "PLACE_ID")
-    private long id;
+    private Long id;
 
     // 장소명
     @NotNull

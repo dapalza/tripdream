@@ -17,7 +17,7 @@ public class Budget {
     @Id
     @GeneratedValue
     @Column(name = "BUDGET_ID")
-    private long id;
+    private Long id;
 
     private String category;
 

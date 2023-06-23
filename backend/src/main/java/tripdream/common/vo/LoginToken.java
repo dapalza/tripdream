@@ -1,4 +1,4 @@
-package tripdream.common.vo.login;
+package tripdream.common.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
