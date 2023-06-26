@@ -42,6 +42,8 @@ public class WebSecurityConfig{
                 .antMatchers("/api/register").permitAll()
                 // 로그인 요청은 로그인을 요구하지 않음
                 .antMatchers("/api/login").permitAll()
+                // 이미지 업로드 구현용으로 일단 열기
+                .antMatchers("/api/image/upload").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 // 커스텀 필터를 UsernamePasswordAuthenticationFilter 전에 실행

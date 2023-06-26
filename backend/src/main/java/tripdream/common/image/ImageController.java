@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import tripdream.common.dto.res.ImageResponse;
+import tripdream.common.exception.ErrorCode;
+import tripdream.common.exception.FileNotFoundException;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,11 +27,12 @@ public class ImageController {
     public ResponseEntity<ImageResponse> uploadImage(MultipartFile file) throws IOException {
 
         if(!file.isEmpty()) {
-            log.info("file is not empty = {}", file.getOriginalFilename());
             file.transferTo(new File(file.getOriginalFilename()));
+        } else {
+            throw new FileNotFoundException(ErrorCode.FILE_NOT_FOUND);
         }
 
-        ImageResponse imageResponse = imageService.uploadImage();
+        ImageResponse imageResponse = imageService.uploadImage(file);
 
         return new ResponseEntity<>(imageResponse, HttpStatus.OK);
     }
