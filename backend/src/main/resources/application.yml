@@ -1,22 +1,14 @@
 spring:
   profiles:
-    active: local
-#    active: prod
-server:
-  port: 8082
----
-
----
-logging.level:
-  org.hibernate.SQL: debug
-
----
-spring:
-  profiles:
     group:
       "local": "localdb, common"
       "dev" : "devdb, common"
       "prod": "proddb, common"
+    active: local
+server:
+  port: 8082
+logging.level:
+  org.hibernate.SQL: debug
 
 --- # common
 spring:
@@ -77,7 +69,7 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-      location: D:\works\study\filetest
+      location: /var/lib/jenkins/deploy/tripdream/upload-images/
 
 --- # proddb
 spring:
@@ -100,6 +92,6 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-      location: D:\works\study\filetest
+      location: /var/lib/jenkins/deploy/tripdream/upload-images/
 
 
