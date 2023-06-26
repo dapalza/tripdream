@@ -1,20 +1,14 @@
 spring:
   profiles:
-    active: prod
+    group:
+      "local": "localdb, common"
+      "dev" : "devdb, common"
+      "prod": "proddb, common"
+    active: local
 server:
   port: 8082
----
-
----
 logging.level:
   org.hibernate.SQL: debug
-
----
-spring:
-  profiles:
-    group:
-      "local": "devdb, common"
-      "prod": "proddb, common"
 
 --- # common
 spring:
@@ -30,6 +24,30 @@ jwt:
   secret:
     VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
   access-token-validity-in-seconds: 60 * 10 # 10 min
+
+--- # localdb
+spring:
+  config:
+    activate:
+      on-profile: "localdb"
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/tripdreamdb?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+    username: yoon
+    password: 1121
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+      location: D:\works\study\filetest
+
 --- # devdb
 spring:
   config:
@@ -47,6 +65,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+      location: /var/lib/jenkins/deploy/tripdream/upload-images/
 
 --- # proddb
 spring:
@@ -61,9 +84,14 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
         format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+      location: /var/lib/jenkins/deploy/tripdream/upload-images/
 
 

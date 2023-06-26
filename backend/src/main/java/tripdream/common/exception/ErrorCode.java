@@ -27,6 +27,11 @@ public enum ErrorCode {
 
     MEMBER_NOT_FOUND(400, "M005", "회원정보가 없습니다."),
 
+    NICKNAME_DUPLICATION(400, "M006", "중복된 이메일입니다."),
+
+    // File
+    FILE_NOT_FOUND(400, "F001", "파일 전송에 실패했습니다.");
+
 
     ;
 

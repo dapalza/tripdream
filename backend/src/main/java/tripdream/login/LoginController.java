@@ -18,7 +18,7 @@ import tripdream.common.dto.req.LoginRequest;
 import tripdream.common.dto.res.ErrorResponse;
 import tripdream.common.dto.res.LoginResponse;
 import tripdream.common.entity.Member;
-import tripdream.common.entity.MemberToken;
+import tripdream.common.entity.Token;
 import tripdream.common.exception.ErrorCode;
 import tripdream.common.exception.MemberNotFoundException;
 import tripdream.common.exception.ValidCheckException;
@@ -32,9 +32,9 @@ public class LoginController {
     private final LoginService loginService;
 
 
-    @PostMapping(value="/signIn")
+    @PostMapping(value= "/login")
     // @CrossOrigin(origins = {"http://localhost:8084"}, allowedHeaders = {"Authorization"})
-    @Operation(summary = "로그인", description = "/api/signIn으로 요청")
+    @Operation(summary = "로그인", description = "/api/login으로 요청")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "성공", response = LoginResponse.class),
             @ApiResponse(code = 400, message = "못 찾음", response = ErrorResponse.class),
@@ -53,7 +53,7 @@ public class LoginController {
         Member member = loginService.login(loginRequest);
 
         log.info("after login");
-        MemberToken token = member.getMemberToken();
+        Token token = member.getToken();
 
         log.info("token lets go = {}", token.getAccessToken());
 
@@ -62,7 +62,7 @@ public class LoginController {
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
         }
         else {
-            throw new MemberNotFoundException(ErrorCode.LOGIN_INPUT_INVALID);
+            throw new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
         }
     }
 }

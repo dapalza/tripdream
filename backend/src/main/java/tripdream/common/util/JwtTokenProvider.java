@@ -13,9 +13,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import tripdream.common.vo.login.LoginToken;
+import tripdream.common.vo.LoginToken;
 
 import java.security.Key;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -29,13 +31,16 @@ public class JwtTokenProvider {
     private final Key key;
 
     // 현재 시간
-    long now = (new Date()).getTime();
+    LocalDateTime localNow = LocalDateTime.now();
 
     // Access token 만료 시간 : 10분
-    final Date accessTokenExpireAt = new Date(now + 60 * 10 * 1000L);
+    final int accessTokenExpireLong = 10;
 
-    // Refresh token 만료 시간 : 6시간
-    final Date refreshTokenExpireAt = new Date(now + 60 * 60 * 6 * 1000L);
+    // Refresh token 만료 시간 : 60분
+    final int refreshTokenExpireLong = 60;
+
+    final Date accessTokenExpireAt = Timestamp.valueOf(localNow.plusMinutes(accessTokenExpireLong));
+    final Date refreshTokenExpireAt = Timestamp.valueOf(localNow.plusMinutes(refreshTokenExpireLong));
 
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -64,23 +69,30 @@ public class JwtTokenProvider {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
+        log.info("now = {}", localNow);
         log.info("accessToken info ={}", accessToken);
+        log.info("accessTokenExpireLong info ={}", accessTokenExpireLong);
+        log.info("accessTokenExpireAt info ={}", LocalDateTime.now().plusNanos(accessTokenExpireLong));
         log.info("refreshToken info ={}", refreshToken);
+        log.info("refreshTokenExpireAt info ={}", LocalDateTime.now().plusNanos(refreshTokenExpireLong));
 
         return LoginToken.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .accessTokenExpireAt(LocalDateTime.now().plusMinutes(accessTokenExpireLong))
+                .refreshTokenExpireAt(LocalDateTime.now().plusMinutes(refreshTokenExpireLong))
                 .build();
     }
 
     // JWT 토큰 복호화해서 토큰 내 정보 읽기
     public Authentication getaAuthentication(String accessToken) {
+        log.info("call get authentication");
         // 토큰 복호화
         Claims claims = parseClaims(accessToken);
 
         if(claims.get("auth") == null) {
-
+            log.error("auth is null");
         }
 
         // 클레임에서 권한 정보 가져오기
@@ -90,6 +102,8 @@ public class JwtTokenProvider {
                         .collect(Collectors.toList());
 
         UserDetails principal = new User(claims.getSubject(), "", authorities);
+
+        log.info("end get authentication");
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
 
     }
@@ -100,7 +114,7 @@ public class JwtTokenProvider {
             Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
-                    .parseClaimsJwt(token);
+                    .parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
             log.error("Invalid JWT Token", e);
@@ -121,7 +135,7 @@ public class JwtTokenProvider {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
-                    .parseClaimsJwt(accessToken)
+                    .parseClaimsJws(accessToken)
                     .getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();

@@ -7,7 +7,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -42,7 +41,9 @@ public class WebSecurityConfig{
                 // 회원가입 요청은 로그인을 요구하지 않음
                 .antMatchers("/api/register").permitAll()
                 // 로그인 요청은 로그인을 요구하지 않음
-                .antMatchers("/api/signIn").permitAll()
+                .antMatchers("/api/login").permitAll()
+                // 이미지 업로드 구현용으로 일단 열기
+                .antMatchers("/api/image/upload").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 // 커스텀 필터를 UsernamePasswordAuthenticationFilter 전에 실행

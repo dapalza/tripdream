@@ -42,11 +42,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
     }
 
+    // 비밀번호 오류
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentialsException(AuthenticationException e) {
         ErrorCode errorCode = ErrorCode.PASSWORD_INCORRECT;
         ErrorResponse response = new ErrorResponse(errorCode);
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
     }
+
+    // 닉네임 중복
+
 
 }
