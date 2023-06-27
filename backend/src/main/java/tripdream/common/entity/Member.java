@@ -85,6 +85,11 @@ public class Member extends CommonTimeEntity implements UserDetails {
         this.password = password;
     }
 
+    public void storeRoles(String roles) {
+        List<String> roleList = List.of(roles.split(","));
+        this.roles = roleList;
+    }
+
     // 하단은 시큐리티 위한 override 메소드들
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
