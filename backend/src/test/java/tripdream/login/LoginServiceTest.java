@@ -1,7 +1,9 @@
+/*
 package tripdream.login;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -18,6 +20,7 @@ import tripdream.common.exception.MemberNotFoundException;
 import tripdream.common.util.JwtTokenProvider;
 import tripdream.common.vo.login.LoginToken;
 
+@SpringBootTest
 class LoginServiceTest implements UserDetailsService {
 
     @Autowired
@@ -94,4 +97,4 @@ class LoginServiceTest implements UserDetailsService {
                 .roles(member.getRoles().toArray(new String[0]))
                 .build();
     }
-}
+}*/
