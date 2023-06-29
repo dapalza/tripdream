@@ -9,12 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import tripdream.common.dto.res.ErrorResponse;
+import tripdream.common.dto.res.RegisterResponse;
 import tripdream.common.entity.Member;
 import tripdream.common.exception.ErrorCode;
 import tripdream.common.exception.LoginInputInvalidException;
-import tripdream.common.dto.req.RegisterRequest;
-import tripdream.common.dto.res.ErrorResponse;
-import tripdream.common.dto.res.RegisterResponse;
 
 @RestController
 @RequiredArgsConstructor

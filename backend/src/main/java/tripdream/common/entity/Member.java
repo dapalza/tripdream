@@ -50,8 +50,6 @@ public class Member extends CommonTimeEntity implements UserDetails {
     private LocalDate birth;
 
     // 계정 잠금 여부
-    @NotBlank
-    @NotNull
     private String locked;
 
     // 닉네임 (중복 없음)
@@ -75,6 +73,11 @@ public class Member extends CommonTimeEntity implements UserDetails {
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
+
+    @PrePersist
+    private void makeDefault() {
+        locked = "0";
+    }
 
     public void changeMemberToken(Token token) {
         this.token = token;

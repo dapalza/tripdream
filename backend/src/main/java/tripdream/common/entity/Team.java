@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,9 +15,10 @@ import java.util.List;
 public class Team {
     @Id
     @GeneratedValue
+    @Column(name = "TEAM_ID")
     private Long id;
 
-    @OneToMany
-    @JoinColumn(name = "MEMBER_ID")
-    private List<Member> members;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TEAM_ID")
+    private List<Member> members = new ArrayList<>();
 }

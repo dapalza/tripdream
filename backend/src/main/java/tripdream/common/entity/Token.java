@@ -18,6 +18,7 @@ public class Token extends CommonTimeEntity{
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(name = "TOKEN_ID")
     private String id;
 
     private String accessToken;
