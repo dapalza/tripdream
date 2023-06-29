@@ -10,10 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tripdream.common.dto.req.LoginRequest;
 import tripdream.common.dto.res.ErrorResponse;
 import tripdream.common.dto.res.LoginResponse;
@@ -33,7 +30,10 @@ public class LoginController {
 
 
     @PostMapping(value= "/login")
-    // @CrossOrigin(origins = {"http://localhost:8084"}, allowedHeaders = {"Authorization"})
+    @CrossOrigin(origins = {
+            "http://localhost:8084",
+            "http://fleescape.shop:8084"
+    }, allowedHeaders = {"Authorization"})
     @Operation(summary = "로그인", description = "/api/login으로 요청")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "성공", response = LoginResponse.class),

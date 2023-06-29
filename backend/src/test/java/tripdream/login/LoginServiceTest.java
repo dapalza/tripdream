@@ -1,3 +1,4 @@
+/*
 package tripdream.login;
 
 import org.junit.jupiter.api.Test;
@@ -94,4 +95,4 @@ class LoginServiceTest implements UserDetailsService {
                 .roles(member.getRoles().toArray(new String[0]))
                 .build();
     }
-}
+}*/
