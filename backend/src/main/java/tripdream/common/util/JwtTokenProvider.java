@@ -6,8 +6,10 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -108,13 +110,13 @@ public class JwtTokenProvider {
 
     }
 
-    // 토큰 정보 검증
-    public boolean validateToken(String token) {
+    // 액세스 토큰 정보 검증
+    public boolean validateAccessToken(String accessToken) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
-                    .parseClaimsJws(token);
+                    .parseClaimsJws(accessToken);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
             log.error("Invalid JWT Token", e);
@@ -128,6 +130,32 @@ public class JwtTokenProvider {
         return false;
     }
 
+    // 리프레시 토큰 검증
+    public String validateRefreshToken(String refreshToken) {
+        try {
+            Jws<Claims> claims =
+                    Jwts.parserBuilder()
+                            .setSigningKey(key)
+                            .build()
+                            .parseClaimsJws(refreshToken);
+
+            if (!claims.getBody().getExpiration().before(Timestamp.valueOf(LocalDateTime.now()))) {
+                // Access Token 생성
+                String accessToken = Jwts.builder()
+
+                        .setExpiration(accessTokenExpireAt)
+                        .signWith(key, SignatureAlgorithm.HS256)
+                        .compact();
+                return accessToken;
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            return null;
+        }
+    }
 
     // 클레임 (jwt 정보 단위) 파싱
     private Claims parseClaims(String accessToken) {
@@ -143,4 +171,15 @@ public class JwtTokenProvider {
     }
 
 
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        String memberId = authentication.getPrincipal().toString();
+        String password = authentication.getCredentials().toString();
+
+
+        return null;
+    }
+
+    public boolean supports(Class<?> authentication) {
+        return false;
+    }
 }

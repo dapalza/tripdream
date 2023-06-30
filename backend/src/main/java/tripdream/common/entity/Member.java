@@ -50,7 +50,7 @@ public class Member extends CommonTimeEntity implements UserDetails {
     private LocalDate birth;
 
     // 계정 잠금 여부
-    private String locked;
+    private Boolean locked;
 
     // 닉네임 (중복 없음)
     @NotBlank
@@ -76,7 +76,8 @@ public class Member extends CommonTimeEntity implements UserDetails {
 
     @PrePersist
     private void makeDefault() {
-        locked = "0";
+        locked = false;
+        resigned_date = LocalDateTime.MAX;
     }
 
     public void changeMemberToken(Token token) {
@@ -91,6 +92,12 @@ public class Member extends CommonTimeEntity implements UserDetails {
     public void storeRoles(String roles) {
         List<String> roleList = List.of(roles.split(","));
         this.roles = roleList;
+    }
+
+    // 계정 탈퇴시키기
+    public void resignAccount() {
+        resigned_date = LocalDateTime.now();
+        locked = true;
     }
 
     // 하단은 시큐리티 위한 override 메소드들
@@ -113,21 +120,28 @@ public class Member extends CommonTimeEntity implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
+        if(LocalDateTime.now().isAfter(resigned_date)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
+        if(locked) return false;
         return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
+        // 60일 이상 지나면 비밀번호 변경
+        if(LocalDateTime.now().isAfter(this.getLastModifiedAt().plusDays(60))) return false;
         return true;
     }
 
     @Override
     public boolean isEnabled() {
+        if(locked) return false;
         return true;
     }
 }

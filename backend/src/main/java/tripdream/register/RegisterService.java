@@ -31,7 +31,7 @@ public class RegisterService {
         String hashPassword = hashPassword(member.getPassword());
 
         member.hidePassword(hashPassword);
-        member.storeRoles("USER");
+        member.storeRoles("MEMBER");
 
         log.info("hashing password end");
 
