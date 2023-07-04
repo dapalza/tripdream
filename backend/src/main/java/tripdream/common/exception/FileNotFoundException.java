@@ -2,11 +2,11 @@ package tripdream.common.exception;
 
 public class FileNotFoundException extends BusinessException{
 
-    public FileNotFoundException(ErrorCode errorCode, Throwable cause) {
-        super(errorCode, cause);
+    public FileNotFoundException() {
+        super(ErrorCode.FILE_NOT_FOUND);
     }
 
-    public FileNotFoundException(ErrorCode errorCode) {
-        super(errorCode);
+    public FileNotFoundException(Throwable cause) {
+        super(ErrorCode.FILE_NOT_FOUND, cause);
     }
 }

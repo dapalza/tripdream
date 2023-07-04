@@ -3,11 +3,11 @@ package tripdream.common.util;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SecurityException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -33,8 +33,8 @@ public class JwtTokenProvider {
     // 현재 시간
     LocalDateTime localNow = LocalDateTime.now();
 
-    // Access token 만료 시간 : 10분
-    final int accessTokenExpireLong = 10;
+    // Access token 만료 시간 : 1분
+    final int accessTokenExpireLong = 1;
 
     // Refresh token 만료 시간 : 60분
     final int refreshTokenExpireLong = 60;
@@ -72,16 +72,16 @@ public class JwtTokenProvider {
         log.info("now = {}", localNow);
         log.info("accessToken info ={}", accessToken);
         log.info("accessTokenExpireLong info ={}", accessTokenExpireLong);
-        log.info("accessTokenExpireAt info ={}", LocalDateTime.now().plusNanos(accessTokenExpireLong));
+        log.info("accessTokenExpireAt info ={}", accessTokenExpireAt);
         log.info("refreshToken info ={}", refreshToken);
-        log.info("refreshTokenExpireAt info ={}", LocalDateTime.now().plusNanos(refreshTokenExpireLong));
+        log.info("refreshTokenExpireAt info ={}", refreshTokenExpireAt);
 
         return LoginToken.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .accessTokenExpireAt(LocalDateTime.now().plusMinutes(accessTokenExpireLong))
-                .refreshTokenExpireAt(LocalDateTime.now().plusMinutes(refreshTokenExpireLong))
+                .accessTokenExpireAt(localNow.plusMinutes(accessTokenExpireLong))
+                .refreshTokenExpireAt(localNow.plusMinutes(refreshTokenExpireLong))
                 .build();
     }
 
@@ -108,26 +108,42 @@ public class JwtTokenProvider {
 
     }
 
-    // 토큰 정보 검증
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token);
-            return true;
-        } catch (SecurityException | MalformedJwtException e) {
-            log.error("Invalid JWT Token", e);
-        } catch (ExpiredJwtException e) {
-            log.error("Expired JWT Token", e);
-        } catch (UnsupportedJwtException e) {
-            log.error("Unsupported JWT Token", e);
-        } catch (IllegalArgumentException e) {
-            log.error("JWT claims string is empty", e);
-        }
+    // 액세스 토큰 정보 검증
+    public boolean validateAccessToken(String accessToken) {
+        Jws<Claims> claimsJws = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(accessToken);
+        if(claimsJws != null) return true;
         return false;
     }
 
+    // 리프레시 토큰 검증
+    public String validateRefreshToken(String refreshToken) {
+        try {
+            Jws<Claims> claims =
+                    Jwts.parserBuilder()
+                            .setSigningKey(key)
+                            .build()
+                            .parseClaimsJws(refreshToken);
+
+            if (!claims.getBody().getExpiration().before(Timestamp.valueOf(LocalDateTime.now()))) {
+                // Access Token 생성
+                String accessToken = Jwts.builder()
+
+                        .setExpiration(accessTokenExpireAt)
+                        .signWith(key, SignatureAlgorithm.HS256)
+                        .compact();
+                return accessToken;
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            return null;
+        }
+    }
 
     // 클레임 (jwt 정보 단위) 파싱
     private Claims parseClaims(String accessToken) {
@@ -143,4 +159,15 @@ public class JwtTokenProvider {
     }
 
 
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        String memberId = authentication.getPrincipal().toString();
+        String password = authentication.getCredentials().toString();
+
+
+        return null;
+    }
+
+    public boolean supports(Class<?> authentication) {
+        return false;
+    }
 }

@@ -20,6 +20,8 @@ import tripdream.common.exception.ErrorCode;
 import tripdream.common.exception.MemberNotFoundException;
 import tripdream.common.exception.ValidCheckException;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @RestController
 @RequestMapping("/api")
@@ -42,6 +44,8 @@ public class LoginController {
     })
     public ResponseEntity<LoginResponse> signInRest(@Validated @RequestBody LoginRequest loginRequest, BindingResult bindingResult) throws BindException {
 
+        log.info("time is gold = {}", LocalDateTime.now());
+
         // 유효성 검사 체크
         if(bindingResult.hasErrors()) {
             log.info("what binding error = {}", bindingResult.getFieldErrors());
@@ -62,7 +66,7 @@ public class LoginController {
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
         }
         else {
-            throw new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
+            throw new MemberNotFoundException();
         }
     }
 }

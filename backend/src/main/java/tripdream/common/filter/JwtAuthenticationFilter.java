@@ -24,21 +24,29 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        // 1. Request Header에서 순수 JWT 토큰만 추출
-        String token = resolveToken((HttpServletRequest) request);
+        try {
+            // 1. Request Header에서 순수 JWT 토큰만 추출
+            String token = resolveAccessToken((HttpServletRequest) request);
 
-        // 2. validateToken으로 토큰 유효성 검사
-        if(token != null && jwtTokenProvider.validateToken(token)) {
-            // 유효한 토큰일 경우 토큰에서 Authentication 객체를 가지고 와서 SecurityContext에 저장
-            Authentication authentication = jwtTokenProvider.getaAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            // 2. validateToken으로 토큰 유효성 검사
+            if (token != null && jwtTokenProvider.validateAccessToken(token)) {
+                // 유효한 토큰일 경우 토큰에서 Authentication 객체를 가지고 와서 SecurityContext에 저장
+                Authentication authentication = jwtTokenProvider.getaAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+            // 3. access token이 만료됐다면 refresh token 검사
+//            else if (jwtTokenProvider.validateRefreshToken())
+        } catch (Exception e) {
+            log.error("exception shows in filter = {}", e.toString());
+            request.setAttribute("exception", e);
+        } finally {
+            chain.doFilter(request, response);
         }
-        chain.doFilter(request, response);
     }
 
 
     // Request Header에서 토큰 정보 추출
-    private String resolveToken(HttpServletRequest request) {
+    private String resolveAccessToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         // 토큰 맨 앞에 Bearer를 붙임
         if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {

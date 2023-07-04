@@ -2,13 +2,11 @@ package tripdream.common.dto.res;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.format.annotation.DateTimeFormat;
 import tripdream.common.entity.Member;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @AllArgsConstructor
@@ -35,7 +33,7 @@ public class RegisterResponse {
     private String nickname;
 
     // 탈퇴 날짜
-    private LocalDateTime resigned_date;
+    private LocalDate resigned_date;
 
     // 생성 날짜
     private LocalDateTime createdAt;
@@ -49,6 +47,7 @@ public class RegisterResponse {
         this.nickname = member.getNickname();
         this.birth = member.getBirth();
         this.gender = member.getGender();
+        this.resigned_date = member.getResigned_date();
         this.createdAt = member.getCreatedAt();
         this.lastModifiedAt = member.getLastModifiedAt();
     }

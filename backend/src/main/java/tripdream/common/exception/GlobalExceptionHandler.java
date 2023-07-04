@@ -1,5 +1,10 @@
 package tripdream.common.exception;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SecurityException;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +21,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnknownException(Exception e) {
         log.error("Unknown error = {}", e.toString());
+        log.error("error detail = {}", e.getStackTrace());
         ErrorCode errorCode = ErrorCode.BASIC_ERROR_CODE;
         ErrorResponse response = new ErrorResponse(errorCode);
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
@@ -31,7 +37,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ValidCheckException.class)
     public ResponseEntity<ErrorResponse> handleValidCheckException(ValidCheckException e) {
         ErrorCode errorCode = e.getErrorCode();
-        ErrorResponse response = new ErrorResponse(errorCode, e.getFieldErrors());
+        ErrorResponse response = new ErrorResponse(errorCode);
+        // 스프링 시큐리티 기본 예외 메시지가 있을 시 변경.
+        if(!e.getFieldErrors().isEmpty()) {
+            response.changeMessage(e.getFieldErrors().get(0).getDefaultMessage());
+        }
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
     }
 
@@ -50,7 +60,33 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
     }
 
-    // 닉네임 중복
+    @ExceptionHandler(SecurityException.class)
+    public ResponseEntity<ErrorResponse> handleSecurityException() {
+        ErrorCode errorCode = ErrorCode.SECURITY_EXCEPTION;
+        ErrorResponse response = new ErrorResponse(errorCode);
+        return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<ErrorResponse> handleSignatureException(SignatureException e) {
+        ErrorCode errorCode = ErrorCode.INVALID_TOKEN;
+        ErrorResponse response = new ErrorResponse(errorCode);
+        return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
+    }
+
+    @ExceptionHandler({ UnsupportedJwtException.class, MalformedJwtException.class })
+    public ResponseEntity<ErrorResponse> handleUnsupportedJwtException() {
+        ErrorCode errorCode = ErrorCode.NOT_JWT;
+        ErrorResponse response = new ErrorResponse(errorCode);
+        return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorResponse> handleExpiredJwtException() {
+        ErrorCode errorCode = ErrorCode.EXPIRED_TOKEN;
+        ErrorResponse response = new ErrorResponse(errorCode);
+        return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
+    }
 
 
 }

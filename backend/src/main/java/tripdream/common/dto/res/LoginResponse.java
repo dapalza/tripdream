@@ -13,7 +13,7 @@ public class LoginResponse {
 
     private String email;
 
-    private String locked;
+    private Boolean locked;
 
     public LoginResponse(Member member) {
         this.token = member.getToken();

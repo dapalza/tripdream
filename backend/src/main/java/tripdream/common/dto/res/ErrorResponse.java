@@ -3,10 +3,7 @@ package tripdream.common.dto.res;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.validation.FieldError;
 import tripdream.common.exception.ErrorCode;
-
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -19,9 +16,6 @@ public class ErrorResponse {
     // HTTP 상태코드
     private int status;
     
-    // custom 예외를 제외한 기본 예외 묶음
-    private List<FieldError> errors;
-    
     // 자체 에러코드
     private String code;
 
@@ -31,10 +25,8 @@ public class ErrorResponse {
         this.code = errorCode.getCode();
     }
 
-    public ErrorResponse(ErrorCode errorCode, List<FieldError> errors) {
-        this.message = errorCode.getMessage();
-        this.status = errorCode.getStatus();
-        this.code = errorCode.getCode();
-        this.errors = errors;
+    public void changeMessage(String msg) {
+        message = msg;
     }
+
 }

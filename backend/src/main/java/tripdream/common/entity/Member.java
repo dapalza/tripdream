@@ -50,9 +50,7 @@ public class Member extends CommonTimeEntity implements UserDetails {
     private LocalDate birth;
 
     // 계정 잠금 여부
-    @NotBlank
-    @NotNull
-    private String locked;
+    private Boolean locked;
 
     // 닉네임 (중복 없음)
     @NotBlank
@@ -60,7 +58,7 @@ public class Member extends CommonTimeEntity implements UserDetails {
     private String nickname;
 
     // 탈퇴 날짜
-    private LocalDateTime resigned_date;
+    private LocalDate resigned_date;
 
     // Token 단방향 1:1
     @OneToOne(fetch = FetchType.LAZY)
@@ -76,6 +74,12 @@ public class Member extends CommonTimeEntity implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
+    @PrePersist
+    private void makeDefault() {
+        locked = false;
+        resigned_date = LocalDate.of(9999, 12, 31);
+    }
+
     public void changeMemberToken(Token token) {
         this.token = token;
     }
@@ -88,6 +92,12 @@ public class Member extends CommonTimeEntity implements UserDetails {
     public void storeRoles(String roles) {
         List<String> roleList = List.of(roles.split(","));
         this.roles = roleList;
+    }
+
+    // 계정 탈퇴시키기
+    public void resignAccount() {
+        resigned_date = LocalDate.now();
+        locked = true;
     }
 
     // 하단은 시큐리티 위한 override 메소드들
@@ -110,21 +120,28 @@ public class Member extends CommonTimeEntity implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
+        if(LocalDate.now().isAfter(resigned_date)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
+        if(locked) return false;
         return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
+        // 60일 이상 지나면 비밀번호 변경
+        if(LocalDateTime.now().isAfter(this.getLastModifiedAt().plusDays(60))) return false;
         return true;
     }
 
     @Override
     public boolean isEnabled() {
+        if(locked) return false;
         return true;
     }
 }
