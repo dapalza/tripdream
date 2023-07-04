@@ -1,11 +1,11 @@
 package tripdream.common.exception;
 
 public class DuplicateNicknameException extends DuplicateException{
-    public DuplicateNicknameException(ErrorCode errorCode, Throwable cause) {
-        super(errorCode, cause);
+    public DuplicateNicknameException() {
+        super(ErrorCode.NICKNAME_DUPLICATION);
     }
 
-    public DuplicateNicknameException(ErrorCode errorCode) {
-        super(errorCode);
+    public DuplicateNicknameException(Throwable cause) {
+        super(ErrorCode.NICKNAME_DUPLICATION, cause);
     }
 }

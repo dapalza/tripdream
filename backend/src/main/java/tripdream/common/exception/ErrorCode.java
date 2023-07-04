@@ -29,6 +29,12 @@ public enum ErrorCode {
 
     NICKNAME_DUPLICATION(400, "M006", "중복된 이메일입니다."),
 
+    INVALID_TOKEN(400, "M007", "변조된 토큰입니다."),
+
+    MALFORMED_TOKEN(400, "M008", "올바르지 않은 토큰입니다"),
+
+    EXPIRED_TOKEN(400, "M009", "만료된 토큰입니다."),
+
     // File
     FILE_NOT_FOUND(400, "F001", "파일 전송에 실패했습니다.");
 

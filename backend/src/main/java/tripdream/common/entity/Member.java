@@ -58,7 +58,7 @@ public class Member extends CommonTimeEntity implements UserDetails {
     private String nickname;
 
     // 탈퇴 날짜
-    private LocalDateTime resigned_date;
+    private LocalDate resigned_date;
 
     // Token 단방향 1:1
     @OneToOne(fetch = FetchType.LAZY)
@@ -77,7 +77,7 @@ public class Member extends CommonTimeEntity implements UserDetails {
     @PrePersist
     private void makeDefault() {
         locked = false;
-        resigned_date = LocalDateTime.MAX;
+        resigned_date = LocalDate.of(9999, 12, 31);
     }
 
     public void changeMemberToken(Token token) {
@@ -96,7 +96,7 @@ public class Member extends CommonTimeEntity implements UserDetails {
 
     // 계정 탈퇴시키기
     public void resignAccount() {
-        resigned_date = LocalDateTime.now();
+        resigned_date = LocalDate.now();
         locked = true;
     }
 
@@ -120,7 +120,7 @@ public class Member extends CommonTimeEntity implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        if(LocalDateTime.now().isAfter(resigned_date)) {
+        if(LocalDate.now().isAfter(resigned_date)) {
             return false;
         }
         return true;

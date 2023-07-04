@@ -6,7 +6,6 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -35,8 +34,8 @@ public class JwtTokenProvider {
     // 현재 시간
     LocalDateTime localNow = LocalDateTime.now();
 
-    // Access token 만료 시간 : 10분
-    final int accessTokenExpireLong = 10;
+    // Access token 만료 시간 : 1분
+    final int accessTokenExpireLong = 1;
 
     // Refresh token 만료 시간 : 60분
     final int refreshTokenExpireLong = 60;
@@ -74,16 +73,16 @@ public class JwtTokenProvider {
         log.info("now = {}", localNow);
         log.info("accessToken info ={}", accessToken);
         log.info("accessTokenExpireLong info ={}", accessTokenExpireLong);
-        log.info("accessTokenExpireAt info ={}", LocalDateTime.now().plusNanos(accessTokenExpireLong));
+        log.info("accessTokenExpireAt info ={}", accessTokenExpireAt);
         log.info("refreshToken info ={}", refreshToken);
-        log.info("refreshTokenExpireAt info ={}", LocalDateTime.now().plusNanos(refreshTokenExpireLong));
+        log.info("refreshTokenExpireAt info ={}", refreshTokenExpireAt);
 
         return LoginToken.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .accessTokenExpireAt(LocalDateTime.now().plusMinutes(accessTokenExpireLong))
-                .refreshTokenExpireAt(LocalDateTime.now().plusMinutes(refreshTokenExpireLong))
+                .accessTokenExpireAt(localNow.plusMinutes(accessTokenExpireLong))
+                .refreshTokenExpireAt(localNow.plusMinutes(refreshTokenExpireLong))
                 .build();
     }
 

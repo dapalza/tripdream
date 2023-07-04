@@ -11,13 +11,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tripdream.common.repository.MemberRepository;
-import tripdream.common.repository.MemberTokenRepository;
 import tripdream.common.dto.req.LoginRequest;
 import tripdream.common.entity.Member;
 import tripdream.common.entity.Token;
-import tripdream.common.exception.ErrorCode;
 import tripdream.common.exception.MemberNotFoundException;
+import tripdream.common.repository.MemberRepository;
+import tripdream.common.repository.MemberTokenRepository;
 import tripdream.common.util.JwtTokenProvider;
 import tripdream.common.vo.LoginToken;
 
@@ -81,7 +80,7 @@ public class LoginService implements UserDetailsService {
 
         UserDetails userDetails = memberRepository.findByEmail(username)
                     .map(this::createUserDetails)
-                    .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+                    .orElseThrow(() -> new MemberNotFoundException());
 
         log.info("after call user method");
 

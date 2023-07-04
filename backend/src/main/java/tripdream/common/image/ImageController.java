@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import tripdream.common.dto.res.ImageResponse;
-import tripdream.common.exception.ErrorCode;
 import tripdream.common.exception.FileNotFoundException;
 
 import java.io.File;
@@ -29,7 +28,7 @@ public class ImageController {
         if(!file.isEmpty()) {
             file.transferTo(new File(file.getOriginalFilename()));
         } else {
-            throw new FileNotFoundException(ErrorCode.FILE_NOT_FOUND);
+            throw new FileNotFoundException();
         }
 
         ImageResponse imageResponse = imageService.uploadImage(file);
