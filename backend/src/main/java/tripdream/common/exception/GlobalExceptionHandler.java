@@ -1,5 +1,8 @@
 package tripdream.common.exception;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +53,26 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
     }
 
-    // 닉네임 중복
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<ErrorResponse> handleSignatureException() {
+        ErrorCode errorCode = ErrorCode.INVALID_TOKEN;
+        ErrorResponse response = new ErrorResponse(errorCode);
+        return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
+    }
+
+    @ExceptionHandler(MalformedJwtException.class)
+    public ResponseEntity<ErrorResponse> handleMalformedJwtException() {
+        ErrorCode errorCode = ErrorCode.MALFORMED_TOKEN;
+        ErrorResponse response = new ErrorResponse(errorCode);
+        return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorResponse> handleExpiredJwtException() {
+        ErrorCode errorCode = ErrorCode.EXPIRED_TOKEN;
+        ErrorResponse response = new ErrorResponse(errorCode);
+        return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
+    }
 
 
 }

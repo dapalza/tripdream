@@ -14,6 +14,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import tripdream.common.exception.ExpiredTokenException;
+import tripdream.common.exception.InvalidTokenException;
 import tripdream.common.vo.LoginToken;
 
 import java.security.Key;
@@ -117,10 +119,8 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(accessToken);
             return true;
-        } catch (SecurityException | MalformedJwtException e) {
+        } catch (SecurityException e) {
             log.error("Invalid JWT Token", e);
-        } catch (ExpiredJwtException e) {
-            log.error("Expired JWT Token", e);
         } catch (UnsupportedJwtException e) {
             log.error("Unsupported JWT Token", e);
         } catch (IllegalArgumentException e) {
