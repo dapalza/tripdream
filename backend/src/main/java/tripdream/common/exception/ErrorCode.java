@@ -35,11 +35,12 @@ public enum ErrorCode {
 
     EXPIRED_TOKEN(400, "M009", "만료된 토큰입니다."),
 
+    SECURITY_EXCEPTION(400, "M010", "인증에 문제가 있습니다."),
+
+    NOT_JWT(400, "M011", "JWT 토큰이 아닙니다."),
+
     // File
     FILE_NOT_FOUND(400, "F001", "파일 전송에 실패했습니다.");
-
-
-    ;
 
     final String code;
     final String message;

@@ -1,6 +1,7 @@
 package tripdream.common.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +21,8 @@ import tripdream.common.util.JwtTokenProvider;
 public class WebSecurityConfig{
 
     private final JwtTokenProvider jwtTokenProvider;
+
+    @Qualifier("jwtAuthenticationEntryPoint")
     private final AuthenticationEntryPoint entryPoint;
 
     // JWT를 사용하기 위해서는 기본적으로 password encoder가 필요함.
@@ -49,7 +52,8 @@ public class WebSecurityConfig{
                 // 커스텀 필터를 UsernamePasswordAuthenticationFilter 전에 실행
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 // 시큐리티 예외처리를 @ControllerAdvice 에서 별도 처리
-                .exceptionHandling(handler -> handler.authenticationEntryPoint(entryPoint));
+                .exceptionHandling()
+                .authenticationEntryPoint(entryPoint);
         return http.build();
     }
 }

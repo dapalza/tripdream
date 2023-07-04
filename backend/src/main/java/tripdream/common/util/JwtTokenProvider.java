@@ -3,7 +3,6 @@ package tripdream.common.util;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SecurityException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,8 +13,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import tripdream.common.exception.ExpiredTokenException;
-import tripdream.common.exception.InvalidTokenException;
 import tripdream.common.vo.LoginToken;
 
 import java.security.Key;
@@ -113,19 +110,11 @@ public class JwtTokenProvider {
 
     // 액세스 토큰 정보 검증
     public boolean validateAccessToken(String accessToken) {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(accessToken);
-            return true;
-        } catch (SecurityException e) {
-            log.error("Invalid JWT Token", e);
-        } catch (UnsupportedJwtException e) {
-            log.error("Unsupported JWT Token", e);
-        } catch (IllegalArgumentException e) {
-            log.error("JWT claims string is empty", e);
-        }
+        Jws<Claims> claimsJws = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(accessToken);
+        if(claimsJws != null) return true;
         return false;
     }
 
