@@ -35,7 +35,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
             // 3. access token이 만료됐다면 refresh token 검사
-//            else if (jwtTokenProvider.validateRefreshToken())
+
         } catch (Exception e) {
             log.error("exception shows in filter = {}", e.toString());
             request.setAttribute("exception", e);
