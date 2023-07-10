@@ -30,17 +30,11 @@ public class JwtTokenProvider {
     // 비밀 키
     private final Key key;
 
-    // 현재 시간
-    LocalDateTime localNow = LocalDateTime.now();
-
     // Access token 만료 시간 : 1분
     final int accessTokenExpireLong = 1;
 
     // Refresh token 만료 시간 : 60분
     final int refreshTokenExpireLong = 60;
-
-    final Date accessTokenExpireAt = Timestamp.valueOf(localNow.plusMinutes(accessTokenExpireLong));
-    final Date refreshTokenExpireAt = Timestamp.valueOf(localNow.plusMinutes(refreshTokenExpireLong));
 
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -59,37 +53,41 @@ public class JwtTokenProvider {
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities)
-                .setExpiration(accessTokenExpireAt)
+                // 토큰 생성 시간
+                .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
+                .setExpiration(Timestamp.valueOf(LocalDateTime.now().plusMinutes(accessTokenExpireLong)))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
-                .setExpiration(refreshTokenExpireAt)
+                // 토큰 생성 시간
+                .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
+                .setExpiration(Timestamp.valueOf(LocalDateTime.now().plusMinutes(refreshTokenExpireLong)))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
-        log.info("now = {}", localNow);
+        log.info("now = {}", LocalDateTime.now());
         log.info("accessToken info ={}", accessToken);
         log.info("accessTokenExpireLong info ={}", accessTokenExpireLong);
-        log.info("accessTokenExpireAt info ={}", accessTokenExpireAt);
+        log.info("accessTokenExpireAt info ={}", Timestamp.valueOf(LocalDateTime.now().plusMinutes(accessTokenExpireLong)));
         log.info("refreshToken info ={}", refreshToken);
-        log.info("refreshTokenExpireAt info ={}", refreshTokenExpireAt);
+        log.info("refreshTokenExpireAt info ={}", Timestamp.valueOf(LocalDateTime.now().plusMinutes(refreshTokenExpireLong)));
 
         return LoginToken.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .accessTokenExpireAt(localNow.plusMinutes(accessTokenExpireLong))
-                .refreshTokenExpireAt(localNow.plusMinutes(refreshTokenExpireLong))
+                .accessTokenExpireAt(LocalDateTime.now().plusMinutes(accessTokenExpireLong))
+                .refreshTokenExpireAt(LocalDateTime.now().plusMinutes(refreshTokenExpireLong))
                 .build();
     }
 
     // JWT 토큰 복호화해서 토큰 내 정보 읽기
-    public Authentication getaAuthentication(String accessToken) {
+    public Authentication getaAuthentication(String token) {
         log.info("call get authentication");
         // 토큰 복호화
-        Claims claims = parseClaims(accessToken);
+        Claims claims = parseClaims(token);
 
         if(claims.get("auth") == null) {
             log.error("auth is null");
@@ -119,39 +117,35 @@ public class JwtTokenProvider {
     }
 
     // 리프레시 토큰 검증
-    public String validateRefreshToken(String refreshToken) {
-        try {
-            Jws<Claims> claims =
-                    Jwts.parserBuilder()
-                            .setSigningKey(key)
-                            .build()
-                            .parseClaimsJws(refreshToken);
 
-            if (!claims.getBody().getExpiration().before(Timestamp.valueOf(LocalDateTime.now()))) {
-                // Access Token 생성
-                String accessToken = Jwts.builder()
 
-                        .setExpiration(accessTokenExpireAt)
-                        .signWith(key, SignatureAlgorithm.HS256)
-                        .compact();
-                return accessToken;
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            return null;
-        }
+    private String regenerateAccessToken(Authentication authentication) {
+        log.info("call regenerate token");
+        String authorities = authentication
+                .getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        // Access Token 생성
+        String accessToken = Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim("auth", authorities)
+                // 토큰 생성 시간
+                .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
+                .setExpiration(Timestamp.valueOf(LocalDateTime.now().plusMinutes(accessTokenExpireLong)))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        return accessToken;
     }
 
     // 클레임 (jwt 정보 단위) 파싱
-    private Claims parseClaims(String accessToken) {
+    private Claims parseClaims(String token) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
-                    .parseClaimsJws(accessToken)
+                    .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Member extends CommonTimeEntity implements UserDetails {
+public class Member extends CommonEntity implements UserDetails {
 
     @Id
     @Column(name = "MEMBER_ID")

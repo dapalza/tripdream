@@ -41,6 +41,10 @@ public class RegisterResponse {
     // 수정 날짜
     private LocalDateTime lastModifiedAt;
 
+    private String createdByIp;
+
+    private String lastModifiedByIp;
+
     public RegisterResponse(Member member) {
         this.email = member.getEmail();
         this.password = member.getPassword();
@@ -50,5 +54,7 @@ public class RegisterResponse {
         this.resigned_date = member.getResigned_date();
         this.createdAt = member.getCreatedAt();
         this.lastModifiedAt = member.getLastModifiedAt();
+        this.createdByIp = member.getCreatedByIp();
+        this.lastModifiedByIp = member.getLastModifiedByIp();
     }
 }
