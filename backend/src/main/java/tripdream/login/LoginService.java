@@ -51,10 +51,6 @@ public class LoginService implements UserDetailsService {
 
         log.info("start making user token");
 
-        if(loginRequest.getAccessToken() != null) {
-
-        }
-
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         LoginToken loginToken = jwtTokenProvider.generateToken(authentication);
 

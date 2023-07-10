@@ -20,7 +20,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -44,28 +43,12 @@ public class JwtTokenProvider {
     // 유저 정보로 AccessToken, RefreshToken 생성
     public LoginToken generateToken(Authentication authentication) {
         log.info("call generate token");
-        String authorities = authentication
-                .getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
 
         // Access Token 생성
-        String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim("auth", authorities)
-                // 토큰 생성 시간
-                .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .setExpiration(Timestamp.valueOf(LocalDateTime.now().plusMinutes(accessTokenExpireLong)))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+        String accessToken = makeAccessToken(authentication);
 
         // Refresh Token 생성
-        String refreshToken = Jwts.builder()
-                // 토큰 생성 시간
-                .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .setExpiration(Timestamp.valueOf(LocalDateTime.now().plusMinutes(refreshTokenExpireLong)))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+        String refreshToken = makeRefreshToken();
 
         log.info("now = {}", LocalDateTime.now());
         log.info("accessToken info ={}", accessToken);
@@ -83,8 +66,35 @@ public class JwtTokenProvider {
                 .build();
     }
 
+    private String makeRefreshToken() {
+        return Jwts.builder()
+                // 토큰 생성 시간
+                .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
+                // 토큰 만료 시간
+                .setExpiration(Timestamp.valueOf(LocalDateTime.now().plusMinutes(refreshTokenExpireLong)))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    private String makeAccessToken(Authentication authentication) {
+        String authorities = authentication
+                .getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        return Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim("auth", authorities)
+                // 토큰 생성 시간
+                .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
+                // 토큰 만료 시간
+                .setExpiration(Timestamp.valueOf(LocalDateTime.now().plusMinutes(accessTokenExpireLong)))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
     // JWT 토큰 복호화해서 토큰 내 정보 읽기
-    public Authentication getaAuthentication(String token) {
+    public Authentication getAuthentication(String token) {
         log.info("call get authentication");
         // 토큰 복호화
         Claims claims = parseClaims(token);
@@ -107,12 +117,16 @@ public class JwtTokenProvider {
     }
 
     // 액세스 토큰 정보 검증
-    public boolean validateAccessToken(String accessToken) {
+    public boolean isValidAccessToken(String accessToken) {
         Jws<Claims> claimsJws = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(accessToken);
-        if(claimsJws != null) return true;
+        if(claimsJws != null)  {
+            log.info("valid access token");
+            return true;
+        }
+        log.info("invalid access token");
         return false;
     }
 
@@ -121,22 +135,9 @@ public class JwtTokenProvider {
 
     private String regenerateAccessToken(Authentication authentication) {
         log.info("call regenerate token");
-        String authorities = authentication
-                .getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
 
         // Access Token 생성
-        String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim("auth", authorities)
-                // 토큰 생성 시간
-                .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .setExpiration(Timestamp.valueOf(LocalDateTime.now().plusMinutes(accessTokenExpireLong)))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
-
-        return accessToken;
+        return makeAccessToken(authentication);
     }
 
     // 클레임 (jwt 정보 단위) 파싱
