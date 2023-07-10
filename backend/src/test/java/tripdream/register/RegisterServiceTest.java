@@ -31,7 +31,7 @@ class RegisterServiceTest{
                 "abcde",
                 "F",
                 LocalDate.of(1998, 2, 24),
-                "0",
+                false,
                 "layton",
                 null,
                 new Token(),
