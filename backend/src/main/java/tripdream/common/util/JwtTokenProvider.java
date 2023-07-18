@@ -13,7 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import tripdream.common.vo.LoginToken;
+import tripdream.common.vo.LoginTokenVO;
 
 import java.security.Key;
 import java.sql.Timestamp;
@@ -29,8 +29,8 @@ public class JwtTokenProvider {
     // 비밀 키
     private final Key key;
 
-    // Access token 만료 시간 : 1분
-    final int accessTokenExpireLong = 1;
+    // Access token 만료 시간 : 3분
+    final int accessTokenExpireLong = 3;
 
     // Refresh token 만료 시간 : 60분
     final int refreshTokenExpireLong = 60;
@@ -41,7 +41,7 @@ public class JwtTokenProvider {
     }
 
     // 유저 정보로 AccessToken, RefreshToken 생성
-    public LoginToken generateToken(Authentication authentication) {
+    public LoginTokenVO generateToken(Authentication authentication) {
         log.info("call generate token");
 
         // Access Token 생성
@@ -57,7 +57,7 @@ public class JwtTokenProvider {
         log.info("refreshToken info ={}", refreshToken);
         log.info("refreshTokenExpireAt info ={}", Timestamp.valueOf(LocalDateTime.now().plusMinutes(refreshTokenExpireLong)));
 
-        return LoginToken.builder()
+        return LoginTokenVO.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)

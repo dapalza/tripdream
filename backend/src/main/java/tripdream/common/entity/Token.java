@@ -6,14 +6,14 @@ import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import tripdream.common.vo.LoginToken;
+import tripdream.common.vo.LoginTokenVO;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor
-public class Token extends CommonTimeEntity{
+public class Token extends CommonEntity{
     
     @Id
     @GeneratedValue(generator = "uuid")
@@ -34,11 +34,11 @@ public class Token extends CommonTimeEntity{
     // 장기 토큰 만료 시간
     private LocalDateTime refreshTokenExpireAt;
 
-    public Token(LoginToken loginToken) {
-        this.accessToken= loginToken.getAccessToken();
-        this.refreshToken= loginToken.getRefreshToken();
-        this.accessTokenExpireAt = loginToken.getAccessTokenExpireAt();
-        this.refreshTokenExpireAt = loginToken.getRefreshTokenExpireAt();
+    public Token(LoginTokenVO loginTokenVO) {
+        this.accessToken= loginTokenVO.getAccessToken();
+        this.refreshToken= loginTokenVO.getRefreshToken();
+        this.accessTokenExpireAt = loginTokenVO.getAccessTokenExpireAt();
+        this.refreshTokenExpireAt = loginTokenVO.getRefreshTokenExpireAt();
         this.useYn = 'Y';
     }
 

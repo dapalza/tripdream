@@ -16,9 +16,9 @@ import tripdream.common.entity.Member;
 import tripdream.common.entity.Token;
 import tripdream.common.exception.MemberNotFoundException;
 import tripdream.common.repository.MemberRepository;
-import tripdream.common.repository.MemberTokenRepository;
+import tripdream.common.repository.TokenRepository;
 import tripdream.common.util.JwtTokenProvider;
-import tripdream.common.vo.LoginToken;
+import tripdream.common.vo.LoginTokenVO;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +27,7 @@ import tripdream.common.vo.LoginToken;
 public class LoginService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
-    private final MemberTokenRepository memberTokenRepository;
+    private final TokenRepository tokenRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -52,17 +52,17 @@ public class LoginService implements UserDetailsService {
         log.info("start making user token");
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        LoginToken loginToken = jwtTokenProvider.generateToken(authentication);
+        LoginTokenVO loginTokenVO = jwtTokenProvider.generateToken(authentication);
 
-        log.info("login token info = {}", loginToken.getAccessToken());
+        log.info("login token info = {}", loginTokenVO.getAccessToken());
 
         // 이메일에 해당되는 사용자
         Member member = memberRepository.findByEmail(loginRequest.getEmail()).get();
 
-        loginToken.giveMemberId(member.getId());
+        loginTokenVO.giveMemberId(member.getId());
 
-        Token token = new Token(loginToken);
-        memberTokenRepository.save(token);
+        Token token = new Token(loginTokenVO);
+        tokenRepository.save(token);
         member.changeMemberToken(token);
         return member;
 
@@ -81,6 +81,11 @@ public class LoginService implements UserDetailsService {
         log.info("after call user method");
 
         return userDetails;
+    }
+
+    public void checkRefreshTokenValid(String refreshToken) {
+
+        Token token = tokenRepository.findByRefreshToken(refreshToken);
     }
 
     private UserDetails createUserDetails(Member member) {

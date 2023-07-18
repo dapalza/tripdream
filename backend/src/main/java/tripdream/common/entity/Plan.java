@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Plan {
+public class Plan extends CommonEntity {
     @Id
     @GeneratedValue
     @Column(name = "PLAN_ID")

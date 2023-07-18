@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import tripdream.common.dto.req.LoginRequest;
+import tripdream.common.dto.req.RefreshRequest;
 import tripdream.common.dto.res.ErrorResponse;
 import tripdream.common.dto.res.LoginResponse;
 import tripdream.common.entity.Member;
@@ -68,5 +69,13 @@ public class LoginController {
         else {
             throw new MemberNotFoundException();
         }
+    }
+
+    @PostMapping("/refresh-token")
+    public void makeAccessTokenByRefreshToken(@RequestBody RefreshRequest request) {
+        String refreshToken = request.getRefreshToken();
+
+        loginService.checkRefreshTokenValid(refreshToken);
+
     }
 }

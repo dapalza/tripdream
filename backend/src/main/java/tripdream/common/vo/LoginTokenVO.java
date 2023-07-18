@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LoginToken {
+public class LoginTokenVO {
 
     // JWT 인증 타입 = Bearer
     private String grantType;

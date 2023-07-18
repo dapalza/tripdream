@@ -47,6 +47,8 @@ public class WebSecurityConfig{
                 .antMatchers("/api/register").permitAll()
                 // 로그인 요청은 로그인을 요구하지 않음
                 .antMatchers("/api/login").permitAll()
+                // refresh token 요청은 로그인을 요구하지 않음
+                .antMatchers("/api/refresh-token").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 // 커스텀 필터를 UsernamePasswordAuthenticationFilter 전에 실행
