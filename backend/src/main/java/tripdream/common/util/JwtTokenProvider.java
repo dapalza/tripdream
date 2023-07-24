@@ -7,13 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import tripdream.common.vo.LoginTokenVO;
+import tripdream.common.entity.Token;
 
 import java.security.Key;
 import java.sql.Timestamp;
@@ -30,7 +29,7 @@ public class JwtTokenProvider {
     private final Key key;
 
     // Access token 만료 시간 : 3분
-    final int accessTokenExpireLong = 3;
+    final int accessTokenExpireLong = 1;
 
     // Refresh token 만료 시간 : 60분
     final int refreshTokenExpireLong = 60;
@@ -41,14 +40,14 @@ public class JwtTokenProvider {
     }
 
     // 유저 정보로 AccessToken, RefreshToken 생성
-    public LoginTokenVO generateToken(Authentication authentication) {
+    public Token generateToken(Authentication authentication) {
         log.info("call generate token");
 
         // Access Token 생성
-        String accessToken = makeAccessToken(authentication);
+        String accessToken = buildTokenSelf(authentication, accessTokenExpireLong);
 
         // Refresh Token 생성
-        String refreshToken = makeRefreshToken();
+        String refreshToken = buildTokenSelf(authentication, refreshTokenExpireLong);
 
         log.info("now = {}", LocalDateTime.now());
         log.info("accessToken info ={}", accessToken);
@@ -57,8 +56,7 @@ public class JwtTokenProvider {
         log.info("refreshToken info ={}", refreshToken);
         log.info("refreshTokenExpireAt info ={}", Timestamp.valueOf(LocalDateTime.now().plusMinutes(refreshTokenExpireLong)));
 
-        return LoginTokenVO.builder()
-                .grantType("Bearer")
+        return Token.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .accessTokenExpireAt(LocalDateTime.now().plusMinutes(accessTokenExpireLong))
@@ -66,17 +64,18 @@ public class JwtTokenProvider {
                 .build();
     }
 
-    private String makeRefreshToken() {
-        return Jwts.builder()
-                // 토큰 생성 시간
-                .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
-                // 토큰 만료 시간
-                .setExpiration(Timestamp.valueOf(LocalDateTime.now().plusMinutes(refreshTokenExpireLong)))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+    // 유저 정보로 AccessToken, RefreshToken 생성
+    public Token regenerateAccessToken(Authentication authentication, Token token) {
+        log.info("call regenerate access token");
+
+        // Access Token 생성
+        String accessToken = buildTokenSelf(authentication, accessTokenExpireLong);
+        token.refreshAccessToken(accessToken, accessTokenExpireLong);
+
+        return token;
     }
 
-    private String makeAccessToken(Authentication authentication) {
+    private String buildTokenSelf(Authentication authentication, int tokenLong) {
         String authorities = authentication
                 .getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -88,7 +87,7 @@ public class JwtTokenProvider {
                 // 토큰 생성 시간
                 .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
                 // 토큰 만료 시간
-                .setExpiration(Timestamp.valueOf(LocalDateTime.now().plusMinutes(accessTokenExpireLong)))
+                .setExpiration(Timestamp.valueOf(LocalDateTime.now().plusMinutes(tokenLong)))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -117,27 +116,17 @@ public class JwtTokenProvider {
     }
 
     // 액세스 토큰 정보 검증
-    public boolean isValidAccessToken(String accessToken) {
+    public boolean isValidToken(String token) {
         Jws<Claims> claimsJws = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(accessToken);
+                .parseClaimsJws(token);
         if(claimsJws != null)  {
-            log.info("valid access token");
+            log.info("valid token");
             return true;
         }
-        log.info("invalid access token");
+        log.info("invalid token");
         return false;
-    }
-
-    // 리프레시 토큰 검증
-
-
-    private String regenerateAccessToken(Authentication authentication) {
-        log.info("call regenerate token");
-
-        // Access Token 생성
-        return makeAccessToken(authentication);
     }
 
     // 클레임 (jwt 정보 단위) 파싱
@@ -153,16 +142,4 @@ public class JwtTokenProvider {
         }
     }
 
-
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String memberId = authentication.getPrincipal().toString();
-        String password = authentication.getCredentials().toString();
-
-
-        return null;
-    }
-
-    public boolean supports(Class<?> authentication) {
-        return false;
-    }
 }

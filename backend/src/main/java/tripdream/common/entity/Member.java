@@ -61,12 +61,12 @@ public class Member extends CommonEntity implements UserDetails {
     private LocalDate resigned_date;
 
     // Token 단방향 1:1
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "TOKEN_ID")
     private Token token;
 
     // Image 단방향 1:1
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "IMAGE_ID")
     private Image image;
 
