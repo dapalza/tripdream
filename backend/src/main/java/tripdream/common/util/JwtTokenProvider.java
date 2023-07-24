@@ -28,11 +28,11 @@ public class JwtTokenProvider {
     // 비밀 키
     private final Key key;
 
-    // Access token 만료 시간 : 3분
-    final int accessTokenExpireLong = 1;
+    // Access token 만료 시간 : 30분
+    final int accessTokenExpireLong = 30;
 
-    // Refresh token 만료 시간 : 60분
-    final int refreshTokenExpireLong = 60;
+    // Refresh token 만료 시간 : 12시간
+    final int refreshTokenExpireLong = 60 * 12;
 
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
