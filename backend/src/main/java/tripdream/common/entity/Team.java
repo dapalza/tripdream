@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Team {
+public class Team extends CommonEntity {
     @Id
     @GeneratedValue
     @Column(name = "TEAM_ID")

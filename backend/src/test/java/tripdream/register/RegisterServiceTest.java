@@ -3,6 +3,7 @@ package tripdream.register;
 // import org.assertj.core.api.Assertions;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import tripdream.common.entity.Image;
 import tripdream.common.entity.Member;
 import tripdream.common.entity.Token;
+import tripdream.common.repository.MemberRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,35 +22,44 @@ import java.util.UUID;
 class RegisterServiceTest{
 
     @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
     PasswordEncoder passwordEncoder;
 
     @Test
-    void hashPassword() {
-        // given
-        Member member = new Member(
-                UUID.randomUUID().toString(),
-                "abc@email.com",
-                "abcde",
-                "F",
-                LocalDate.of(1998, 2, 24),
-                false,
-                "layton",
-                null,
-                new Token(),
-                new Image(),
-                new ArrayList<>()
-        );
+    @DisplayName("register test")
+    void register() {
+        //given
+        String hashedPassword = passwordEncoder.encode("abcde");
+        Member member = Member
+                .builder()
+                .email("abc@email.com")
+                .password(hashedPassword)
+                .nickname("nicknameA")
+                .birth(LocalDate.of(1998, 02, 24))
+                .build();
 
-        // when
+        //when
+        Member savedMember = memberRepository.save(member);
 
-        String password = member.getPassword();
-        String encode = passwordEncoder.encode(password);
+        //then
+        Assertions.assertThat(savedMember.getEmail()).isEqualTo(member.getEmail());
 
-        // then
-
-        Assertions.assertThat(passwordEncoder.matches(password, encode)).isEqualTo(true);
     }
 
+    @Test
+    @DisplayName("hash test")
+    void passwordTest() {
+        //given
+        String rawPassword = "abcde";
+        String hashedPassword = passwordEncoder.encode(rawPassword);
 
+        //when
+        boolean result = passwordEncoder.matches(rawPassword, hashedPassword);
+
+        //then
+        Assertions.assertThat(result).isTrue();
+    }
 
 }

@@ -19,8 +19,4 @@ public class LoginRequest {
 
     @NotBlank
     private String password;
-
-    private String accessToken;
-
-    private String refreshToken;
 }

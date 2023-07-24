@@ -12,14 +12,17 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import tripdream.common.dto.req.LoginRequest;
+import tripdream.common.dto.req.RefreshRequest;
 import tripdream.common.dto.res.ErrorResponse;
 import tripdream.common.dto.res.LoginResponse;
 import tripdream.common.entity.Member;
 import tripdream.common.entity.Token;
 import tripdream.common.exception.ErrorCode;
+import tripdream.common.exception.InvalidRefreshTokenException;
 import tripdream.common.exception.MemberNotFoundException;
 import tripdream.common.exception.ValidCheckException;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -68,5 +71,21 @@ public class LoginController {
         else {
             throw new MemberNotFoundException();
         }
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<LoginResponse> makeAccessTokenByRefreshToken(@RequestBody @Valid RefreshRequest request) {
+        String refreshToken = request.getRefreshToken();
+        Token token = loginService.checkRefreshTokenValid(refreshToken);
+
+        if(token != null) {
+            Member member = loginService.refreshAccessToken(token);
+            LoginResponse loginResponse = new LoginResponse(member);
+            return new ResponseEntity<>(loginResponse, HttpStatus.OK);
+        }
+        else {
+            throw new InvalidRefreshTokenException();
+        }
+
     }
 }

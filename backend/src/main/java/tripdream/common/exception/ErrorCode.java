@@ -29,15 +29,24 @@ public enum ErrorCode {
 
     NICKNAME_DUPLICATION(400, "M006", "중복된 이메일입니다."),
 
-    INVALID_TOKEN(400, "M007", "변조된 토큰입니다."),
+    IP_DIFFERENCE(400, "M007", "작성자와 로그인 IP가 다릅니다."),
 
-    MALFORMED_TOKEN(400, "M008", "올바르지 않은 토큰입니다"),
+    // TOKEN
+    CUSTOM_TOKEN_EXCEPTION(400, "T000", "TOKEN 관련 예외입니다."),
+    INVALID_TOKEN(400, "T001", "변조된 토큰입니다."),
 
-    EXPIRED_TOKEN(400, "M009", "만료된 토큰입니다."),
+    MALFORMED_TOKEN(400, "T002", "올바르지 않은 토큰입니다"),
 
-    SECURITY_EXCEPTION(400, "M010", "인증에 문제가 있습니다."),
+    EXPIRED_TOKEN(400, "T003", "만료된 토큰입니다."),
 
-    NOT_JWT(400, "M011", "JWT 토큰이 아닙니다."),
+    SECURITY_EXCEPTION(400, "T004", "인증에 문제가 있습니다."),
+
+    NOT_JWT(400, "T005", "JWT 토큰이 아닙니다."),
+
+    EXPIRED_REFRESH_TOKEN(400, "T006", "Refresh Token이 만료되었습니다."),
+
+
+    INVALID_REFRESH_TOKEN(400, "T007", "REFRESH TOKEN이 존재하지 않습니다."),
 
     // File
     FILE_NOT_FOUND(400, "F001", "파일 전송에 실패했습니다.");

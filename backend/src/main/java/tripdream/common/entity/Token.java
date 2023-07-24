@@ -1,19 +1,23 @@
 package tripdream.common.entity;
 
-import javax.persistence.*;
-
-import org.hibernate.annotations.GenericGenerator;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import tripdream.common.vo.LoginToken;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor
-public class Token extends CommonTimeEntity{
+@AllArgsConstructor
+@Builder
+public class Token extends CommonEntity{
     
     @Id
     @GeneratedValue(generator = "uuid")
@@ -23,23 +27,20 @@ public class Token extends CommonTimeEntity{
 
     private String accessToken;
 
-    private String refreshToken;
-
-    // 사용 여부 (만료 여부)
-    private char useYn;
-
     // 일시 토큰 만료 시간
     private LocalDateTime accessTokenExpireAt;
+
+    private String refreshToken;
 
     // 장기 토큰 만료 시간
     private LocalDateTime refreshTokenExpireAt;
 
-    public Token(LoginToken loginToken) {
-        this.accessToken= loginToken.getAccessToken();
-        this.refreshToken= loginToken.getRefreshToken();
-        this.accessTokenExpireAt = loginToken.getAccessTokenExpireAt();
-        this.refreshTokenExpireAt = loginToken.getRefreshTokenExpireAt();
-        this.useYn = 'Y';
+    // 사용 여부 (만료 여부)
+    private char useYn;
+
+    public void refreshAccessToken(String accessToken, int accessTokenExpireLong) {
+        this.accessToken = accessToken;
+        this.accessTokenExpireAt = LocalDateTime.now().plusMinutes(accessTokenExpireLong);
     }
 
 }

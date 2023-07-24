@@ -13,7 +13,7 @@ import javax.persistence.Id;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Budget {
+public class Budget extends CommonEntity{
     @Id
     @GeneratedValue
     @Column(name = "BUDGET_ID")

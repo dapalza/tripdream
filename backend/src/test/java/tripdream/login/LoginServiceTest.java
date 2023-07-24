@@ -1,48 +1,91 @@
-/*
 package tripdream.login;
 
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import tripdream.common.repository.MemberRepository;
-import tripdream.common.repository.MemberTokenRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import tripdream.common.config.SpringSecurityAuditorAwareConfig;
 import tripdream.common.dto.req.LoginRequest;
 import tripdream.common.entity.Member;
 import tripdream.common.entity.Token;
-import tripdream.common.exception.ErrorCode;
-import tripdream.common.exception.MemberNotFoundException;
+import tripdream.common.repository.MemberRepository;
+import tripdream.common.repository.TokenRepository;
 import tripdream.common.util.JwtTokenProvider;
-import tripdream.common.vo.LoginToken;
 
-class LoginServiceTest implements UserDetailsService {
+import java.time.LocalDate;
+
+@SpringBootTest
+class LoginServiceTest{
 
     @Autowired
     MemberRepository memberRepository;
-    @Autowired
-    MemberTokenRepository memberTokenRepository;
     @Autowired
     AuthenticationManagerBuilder authenticationManagerBuilder;
     @Autowired
     JwtTokenProvider jwtTokenProvider;
 
+    @Autowired
+    TokenRepository tokenRepository;
+
+    @Autowired SpringSecurityAuditorAwareConfig helper;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Test
+    @DisplayName("login test")
     void login() {
+
         // given
+        String hashedPassword = passwordEncoder.encode("abcde");
+        Member oldMember = Member
+                .builder()
+                .email("abc@email.com")
+                .password(hashedPassword)
+                .nickname("nicknameA")
+                .birth(LocalDate.of(1998, 02, 24))
+                .build();
+
+        memberRepository.save(oldMember);
 
         LoginRequest loginRequest =
                 new LoginRequest(
                         "abc@email.com",
-                        "abcde",
-                        null,
-                        null
+                        "abcde"
                 );
+
+        Authentication authentication = getAuthentication(loginRequest);
+
         // when
 
+
+        // 인증 정보를 기반으로 JWT 토큰 생성
+        Token token = jwtTokenProvider.generateToken(authentication);
+
+        String email = loginRequest.getEmail();
+
+        // 이메일에 해당되는 사용자
+        Member member = saveTokenToMember(token, email);
+
+
+        // then
+        Assertions.assertThat(member.getEmail()).isEqualTo(loginRequest.getEmail());
+
+    }
+
+    private Member saveTokenToMember(Token token, String email) {
+        Member member = memberRepository.findByEmail(email).get();
+
+        member.changeMemberToken(token);
+        return member;
+    }
+
+    private Authentication getAuthentication(LoginRequest loginRequest) {
         // 1. login email/pw를 기반으로 Authentication 객체 생성
         // Authentication 에서 현재 인증 여부를 확인하는 authenticated 값 = false
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -51,48 +94,9 @@ class LoginServiceTest implements UserDetailsService {
 
         // 2. 실제 검증(사용자 비밀번호 체크)가 이루어지는 부분
         // authenticate 메서드가 실행될 때 loadUserByUsername 메서드가 실행
-        Authentication authentication =
-                authenticationManagerBuilder
-                        .getObject()
-                        .authenticate(authenticationToken);
-
-
-        // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        LoginToken loginToken = jwtTokenProvider.generateToken(authentication);
-
-
-        // 이메일에 해당되는 사용자
-        Member member = memberRepository.findByEmail(loginRequest.getEmail()).get();
-
-        loginToken.giveMemberId(member.getId());
-
-        Token token = new Token(loginToken);
-        memberTokenRepository.save(token);
-        member.changeMemberToken(token);
-
-        // then
-
+        return authenticationManagerBuilder
+                .getObject()
+                .authenticate(authenticationToken);
     }
 
-
-
-
-    // 등록된 사용자 정보 탐색 (오버라이드)
-    // .authenticate() 메소드 실행 시 해당 메소드가 실행됨.
-    @Override
-    public UserDetails loadUserByUsername(String username) {
-        UserDetails userDetails = memberRepository.findByEmail(username)
-                .map(this::createUserDetails)
-                .orElseThrow(() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
-
-        return userDetails;
-    }
-
-    private UserDetails createUserDetails(Member member) {
-        return User.builder()
-                .username(member.getEmail())
-                .password(member.getPassword())
-                .roles(member.getRoles().toArray(new String[0]))
-                .build();
-    }
-}*/
+}

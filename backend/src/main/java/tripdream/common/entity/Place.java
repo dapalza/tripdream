@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Place {
+public class Place extends CommonEntity{
     @Id
     @GeneratedValue
     @Column(name = "PLACE_ID")

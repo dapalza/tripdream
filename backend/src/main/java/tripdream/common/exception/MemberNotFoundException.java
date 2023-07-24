@@ -1,6 +1,6 @@
 package tripdream.common.exception;
 
-public class MemberNotFoundException extends BusinessException {
+public class MemberNotFoundException extends CustomLoginException {
     public MemberNotFoundException() {
         super(ErrorCode.MEMBER_NOT_FOUND);
     }

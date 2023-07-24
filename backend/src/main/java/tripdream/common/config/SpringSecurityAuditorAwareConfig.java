@@ -40,6 +40,8 @@ public class SpringSecurityAuditorAwareConfig implements AuditorAware<String> {
                 return ip;
             }
         }
+        log.info("remote addr = {}", request.getRemoteAddr());
+
         return request.getRemoteAddr();
     }
 }

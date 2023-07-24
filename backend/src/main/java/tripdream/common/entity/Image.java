@@ -13,7 +13,7 @@ import javax.persistence.Id;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Image {
+public class Image extends CommonEntity{
     @Id
     @GeneratedValue
     @Column(name = "IMAGE_ID")
