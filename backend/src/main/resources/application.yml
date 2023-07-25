@@ -8,7 +8,7 @@ spring:
 server:
   port: 8082
 logging.level:
-  org.hibernate.SQL: debug
+  org.hibernate.SQL: info
 
 --- # common
 spring:
@@ -23,7 +23,7 @@ jwt:
     Authorization
   secret:
     VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
-  access-token-validity-in-seconds: 60 * 10 # 10 min
+  access-token-validity-in-seconds: 60 * 1 # 1 min
 
 --- # localdb
 spring:
@@ -61,7 +61,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
@@ -84,7 +84,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
