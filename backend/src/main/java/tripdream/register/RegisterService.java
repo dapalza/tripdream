@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tripdream.common.entity.Member;
+import tripdream.common.exception.DuplicateEmailException;
 import tripdream.common.exception.DuplicateNicknameException;
 import tripdream.common.repository.MemberRepository;
 
@@ -14,16 +15,11 @@ import tripdream.common.repository.MemberRepository;
 @Slf4j
 public class RegisterService {
 
-    private final MemberRepository repository;
+    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public Member registerCustomer(Member member) {
-
-        // 닉네임 중복 시 예외처리
-        log.info("is nickname not found = {}", repository.findByNickname(member.getNickname()).isEmpty());
-        if(!repository.findByNickname(member.getNickname()).isEmpty())
-            throw new DuplicateNicknameException();
 
         log.info("hashing password start");
 
@@ -34,8 +30,21 @@ public class RegisterService {
 
         log.info("hashing password end");
 
-        return repository.save(member);
+        return memberRepository.save(member);
     }
+
+    public void isEmailCanBeUsed(String email) {
+        // 이메일 중복 시 예외처리
+        if(memberRepository.findByEmail(email).isPresent())
+            throw new DuplicateEmailException();
+    }
+
+    public void isNicknameCanBeUsed(String nickname) {
+        // 닉네임 중복 시 예외처리
+        if(memberRepository.findByNickname(nickname).isPresent())
+            throw new DuplicateNicknameException();
+    }
+
 
     public String hashPassword(String pw) {
         return passwordEncoder.encode(pw);

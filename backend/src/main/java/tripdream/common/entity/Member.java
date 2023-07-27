@@ -5,13 +5,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,19 +37,19 @@ public class Member extends CommonEntity implements UserDetails {
 
     // 이메일
     @NotBlank
-    @NotNull
+    @Email
     @Column(nullable = false)
     private String email;
 
     // 비밀번호
     @NotBlank
-    @NotNull
     private String password;
 
     // 성별 = N - 빈값, M - 남자, F - 여자
     private String gender;
 
     // 생일 (yyyy-MM-dd)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birth;
 
     // 계정 잠금 여부
@@ -54,7 +57,6 @@ public class Member extends CommonEntity implements UserDetails {
 
     // 닉네임 (중복 없음)
     @NotBlank
-    @NotNull
     private String nickname;
 
     // 탈퇴 날짜

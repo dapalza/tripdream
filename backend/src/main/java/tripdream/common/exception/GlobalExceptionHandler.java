@@ -1,5 +1,6 @@
 package tripdream.common.exception;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import tripdream.common.dto.res.ErrorResponse;
 
+import java.time.format.DateTimeParseException;
+
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
@@ -21,7 +24,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnknownException(Exception e) {
         log.error("Unknown error = {}", e.toString());
-        log.error("error detail = {}", e.getStackTrace());
+        for (Throwable el : e.getSuppressed()){
+            log.error("error loop = {}", el.toString());
+        }
         ErrorCode errorCode = ErrorCode.BASIC_ERROR_CODE;
         ErrorResponse response = new ErrorResponse(errorCode);
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
@@ -84,6 +89,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<ErrorResponse> handleExpiredJwtException() {
         ErrorCode errorCode = ErrorCode.EXPIRED_TOKEN;
+        ErrorResponse response = new ErrorResponse(errorCode);
+        return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
+    }
+
+    // 회원가입
+    // 날짜 오류 예외
+    @ExceptionHandler(DateTimeParseException.class)
+    public ResponseEntity<ErrorResponse> handleDateTimeParseException() {
+        ErrorCode errorCode = ErrorCode.DATETIME_PARSE_EXCEPTION;
         ErrorResponse response = new ErrorResponse(errorCode);
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
     }
