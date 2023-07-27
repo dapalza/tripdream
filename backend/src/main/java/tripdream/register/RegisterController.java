@@ -19,15 +19,24 @@ import tripdream.common.dto.res.RegisterResponse;
 import tripdream.common.entity.Member;
 import tripdream.common.exception.LoginInputInvalidException;
 
+import java.net.http.HttpResponse;
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
-@CrossOrigin(origins = {"http://localhost:8084"}, allowedHeaders = {"Authorization"})
+@RequestMapping("/api/register")
+@CrossOrigin(origins = {"http://localhost:8084", "http://fleescape.shop:8084"}, allowedHeaders = {"Authorization"})
 public class RegisterController {
 
     private final RegisterService service;
 
-    @PostMapping(value="/register")
+    private static void checkBindingError(BindingResult bindingResult) throws LoginInputInvalidException {
+        if(bindingResult.hasErrors())
+            throw new LoginInputInvalidException(bindingResult);
+    }
+
+    @PostMapping
     @Operation(summary = "회원가입", description = "/api/register로 요청")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "성공", response = RegisterResponse.class),
@@ -35,13 +44,36 @@ public class RegisterController {
     })
     public ResponseEntity<RegisterResponse> register(@RequestBody @Validated Member member, BindingResult bindingResult) throws LoginInputInvalidException {
 
-        RegisterResponse res = new RegisterResponse(service.registerCustomer(member));
+        checkBindingError(bindingResult);
 
-       if(res != null) {
-           return new ResponseEntity<>(res, HttpStatus.OK);
-       } else {
-           throw new LoginInputInvalidException(bindingResult);
-       }
+        RegisterResponse res = new RegisterResponse(service.registerCustomer(member));
+        return new ResponseEntity<>(res, HttpStatus.OK);
 
    }
+
+    @PostMapping("/check-email")
+    public ResponseEntity<Map<String, String>> checkEmailDuplicate(@Validated String email, BindingResult bindingResult) throws LoginInputInvalidException {
+
+        checkBindingError(bindingResult);
+
+        service.isEmailCanBeUsed(email);
+
+        Map<String, String> res = new HashMap<>();
+        res.put("message", "사용 가능한 이메일입니다.");
+
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @PostMapping("/check-nickname")
+    public ResponseEntity<Map<String, String>> checkNicknameDuplicate(@Validated String nickname, BindingResult bindingResult) throws LoginInputInvalidException {
+
+        checkBindingError(bindingResult);
+
+        service.isNicknameCanBeUsed(nickname);
+
+        Map<String, String> res = new HashMap<>();
+        res.put("message", "사용 가능한 닉네임입니다.");
+
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
 }
