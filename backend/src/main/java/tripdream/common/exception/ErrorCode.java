@@ -25,7 +25,7 @@ public enum ErrorCode {
     LOGIN_INPUT_INVALID(400, "M002", "입력값을 확인해주세요."),
 
     EMAIL_NOT_FOUND(400, "M003", "없는 이메일입니다."),
-    PASSWORD_INCORRECT(400, "M004", "비밀번호가 틀렸습니다."),
+    PASSWORD_INVALID(400, "M004", "비밀번호는 대문자, 소문자, 숫자, 특수문자 1개 이상 8~16자 입니다."),
 
     MEMBER_NOT_FOUND(400, "M005", "회원정보가 없습니다."),
 

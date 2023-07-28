@@ -37,11 +37,12 @@ public class Member extends CommonEntity implements UserDetails {
 
     // 이메일
     @NotBlank
-    @Email
+    @Pattern(regexp = "\\w+@\\w+\\.\\w+(\\.\\w+)?", message = "올바른 이메일 형식이 아닙니다.")
     @Column(nullable = false)
     private String email;
 
     // 비밀번호
+    // 정규식 기준: 대문자 1개, 소문자 1개, 숫자 1개, 특수문자 1개이상의 8~16자
     @NotBlank
     private String password;
 

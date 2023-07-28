@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tripdream.common.entity.Member;
 import tripdream.common.exception.DuplicateEmailException;
 import tripdream.common.exception.DuplicateNicknameException;
+import tripdream.common.exception.PasswordIncorrectException;
 import tripdream.common.repository.MemberRepository;
 
 @Service
@@ -20,6 +21,10 @@ public class RegisterService {
 
     @Transactional
     public Member registerCustomer(Member member) {
+
+        if (!member.getPassword().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$")){
+            throw new PasswordIncorrectException();
+        }
 
         log.info("hashing password start");
 

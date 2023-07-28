@@ -1,6 +1,5 @@
 package tripdream.common.exception;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -24,7 +23,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnknownException(Exception e) {
         log.error("Unknown error = {}", e.toString());
-        for (Throwable el : e.getSuppressed()){
+        e.printStackTrace();
+        for (StackTraceElement el : e.getStackTrace()){
             log.error("error loop = {}", el.toString());
         }
         ErrorCode errorCode = ErrorCode.BASIC_ERROR_CODE;
@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
     // 비밀번호 오류
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentialsException(AuthenticationException e) {
-        ErrorCode errorCode = ErrorCode.PASSWORD_INCORRECT;
+        ErrorCode errorCode = ErrorCode.PASSWORD_INVALID;
         ErrorResponse response = new ErrorResponse(errorCode);
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
     }
