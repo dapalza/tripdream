@@ -6,14 +6,17 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SecurityException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import tripdream.common.dto.res.ErrorResponse;
 
+import javax.validation.ConstraintViolation;
 import java.time.format.DateTimeParseException;
 
 @RestControllerAdvice

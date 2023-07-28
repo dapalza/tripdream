@@ -8,8 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import tripdream.common.entity.Member;
 import tripdream.common.exception.DuplicateEmailException;
 import tripdream.common.exception.DuplicateNicknameException;
+import tripdream.common.exception.InvalidGenderException;
 import tripdream.common.exception.PasswordIncorrectException;
 import tripdream.common.repository.MemberRepository;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +28,13 @@ public class RegisterService {
         if (!member.getPassword().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$")){
             throw new PasswordIncorrectException();
         }
+
+        if(member.getGender() != null) {
+            if (! (member.getGender().equals("M") || member.getGender().equals("F"))) {
+                throw new InvalidGenderException();
+            }
+        }
+
 
         log.info("hashing password start");
 

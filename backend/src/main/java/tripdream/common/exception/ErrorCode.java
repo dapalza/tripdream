@@ -33,6 +33,8 @@ public enum ErrorCode {
 
     IP_DIFFERENCE(400, "M007", "작성자와 로그인 IP가 다릅니다."),
 
+    INVALID_GENDER(400, "M008", "성별은 M, F 중에 입력 가능합니다."),
+
 
 
     // TOKEN
