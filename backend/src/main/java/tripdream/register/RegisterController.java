@@ -19,6 +19,7 @@ import tripdream.common.dto.res.RegisterResponse;
 import tripdream.common.entity.Member;
 import tripdream.common.exception.LoginInputInvalidException;
 
+import javax.validation.constraints.Pattern;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class RegisterController {
 
     private final RegisterService service;
 
-    private static void checkBindingError(BindingResult bindingResult) throws LoginInputInvalidException {
+    private void checkBindingError(BindingResult bindingResult) throws LoginInputInvalidException {
         if(bindingResult.hasErrors())
             throw new LoginInputInvalidException(bindingResult);
     }

@@ -1,9 +1,7 @@
 package tripdream.common.exception;
 
-import org.springframework.validation.BindingResult;
-
-public class PasswordIncorrectException extends ValidCheckException {
-    public PasswordIncorrectException(BindingResult bindingResult) {
-        super(bindingResult, ErrorCode.PASSWORD_INCORRECT);
+public class PasswordIncorrectException extends CustomLoginException {
+    public PasswordIncorrectException() {
+        super(ErrorCode.PASSWORD_INVALID);
     }
 }
