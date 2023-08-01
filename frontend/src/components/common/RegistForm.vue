@@ -132,10 +132,21 @@ const gender = ref([
 const tmpfn=()=>{
     console.log(docfile);
 }
+const imginfo = ref([]);
 const inputImg = (event) =>{
     console.log(event);
-    var file= event.target.files[0];
-    docfile.value = window.URL.createObjectURL(file);
+    if(event.target.files.length != 0){
+        imginfo.value= event.target.files[0];
+        docfile.value = window.URL.createObjectURL(imginfo.value);
+        console.log("--------------------")
+        console.log(imginfo);
+        console.log(docfile);
+    }
+    else{
+        docfile.value = window.URL.createObjectURL(imginfo.value);
+        console.log("????????????")
+        console.log(docfile);
+    }
 }
 const emit = defineEmits(['pushRegist']);
 var Submit = () =>{
@@ -190,14 +201,14 @@ const checkPassword = ref("");
 .regist-input{
     width:168px;
 }
-@media (max-width:558px) {
+@media (max-width:700px) {
     .regist-title{
         width: 278px;
         display:flex;
         justify-content: center;
     }
 }
-@media (min-width:558px) {
+@media (min-width:700px) {
     .regist-title{
             width: 558px;
             display:flex;

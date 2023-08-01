@@ -61,6 +61,10 @@
 <script setup>
 import {ref, reactive} from "vue"
 import {useRouter} from "vue-router"
+
+import { getCurrentInstance } from 'vue';
+const {proxy} = getCurrentInstance();
+
 const form = ref();
 const router = useRouter();
 const customer = reactive({
@@ -69,9 +73,21 @@ const customer = reactive({
 });
 const doLogin = () =>{
     console.log(customer.email + " : "+ customer.password)
-    if(customer.email=="DEV" && customer.password=="1"){
-        router.replace('/main')
+    var loginData = {
+        "email" : customer.email,
+        "password" : customer.password
     }
+
+    proxy.$store.dispatch("customer/login",{
+        url: proxy.$getUrl(),
+        loginData
+    }).then(res =>{
+        console.log(res);
+        router.replace('/main')
+    }).catch(err => {
+        console.log("check point : somthing trouble when do login");
+        console.log(err);
+    })
 }
 const goRegist = () =>{
     router.replace('/regist')

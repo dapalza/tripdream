@@ -24,7 +24,7 @@ const routes = [
     path: '/regist',
     name: 'RegistView',
     component: RegistView
-  }
+  },
 ]
 
 const router = createRouter({
