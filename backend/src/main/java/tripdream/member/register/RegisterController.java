@@ -1,4 +1,4 @@
-package tripdream.register;
+package tripdream.member.register;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -6,21 +6,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tripdream.common.dto.res.ErrorResponse;
 import tripdream.common.dto.res.RegisterResponse;
 import tripdream.common.entity.Member;
 import tripdream.common.exception.LoginInputInvalidException;
 
-import javax.validation.constraints.Pattern;
-import java.net.http.HttpResponse;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,11 +38,11 @@ public class RegisterController {
             @ApiResponse(code = 200, message = "성공", response = RegisterResponse.class),
             @ApiResponse(code = 500, message = "서버 오류", response = ErrorResponse.class)
     })
-    public ResponseEntity<RegisterResponse> register(@RequestBody @Validated Member member, BindingResult bindingResult) throws LoginInputInvalidException {
+    public ResponseEntity<RegisterResponse> register(@RequestPart @Validated Member member, @RequestPart MultipartFile image, BindingResult bindingResult) throws LoginInputInvalidException, IOException {
 
         checkBindingError(bindingResult);
 
-        RegisterResponse res = new RegisterResponse(service.registerCustomer(member));
+        RegisterResponse res = new RegisterResponse(service.registerCustomer(member, image));
         return new ResponseEntity<>(res, HttpStatus.OK);
 
    }
