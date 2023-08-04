@@ -2,6 +2,7 @@ package tripdream.common.file;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.io.IOException;
 
 @Service
 @Transactional
+@Slf4j
 public class FileService {
 
     private final ImageRepository imageRepository;
@@ -36,6 +38,8 @@ public class FileService {
     }
 
     public ImageResponse uploadImage(MultipartFile file) throws IOException {
+        log.info("upload image = {}", file.toString());
+
         if(!file.isEmpty()) {
             ImageResponse imageResponse = new ImageResponse(file.getOriginalFilename());
             String fileUrl = "https://" + bucket + path + file.getOriginalFilename();

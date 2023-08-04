@@ -4,12 +4,13 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import tripdream.common.dto.req.DuplicateCheckRequest;
 import tripdream.common.dto.res.ErrorResponse;
 import tripdream.common.dto.res.RegisterResponse;
 import tripdream.common.entity.Member;
@@ -23,6 +24,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/api/register")
 @CrossOrigin(origins = {"http://localhost:8084", "http://fleescape.shop:8084"}, allowedHeaders = {"Authorization"})
+@Slf4j
 public class RegisterController {
 
     private final RegisterService service;
@@ -38,21 +40,27 @@ public class RegisterController {
             @ApiResponse(code = 200, message = "성공", response = RegisterResponse.class),
             @ApiResponse(code = 500, message = "서버 오류", response = ErrorResponse.class)
     })
-    public ResponseEntity<RegisterResponse> register(@RequestPart @Validated Member member, @RequestPart MultipartFile image, BindingResult bindingResult) throws LoginInputInvalidException, IOException {
+    public ResponseEntity<RegisterResponse> register(@RequestBody @Validated Member member, BindingResult bindingResult) throws LoginInputInvalidException, IOException {
 
         checkBindingError(bindingResult);
 
-        RegisterResponse res = new RegisterResponse(service.registerCustomer(member, image));
+        RegisterResponse res = new RegisterResponse(service.registerCustomer(member));
         return new ResponseEntity<>(res, HttpStatus.OK);
 
    }
 
     @PostMapping("/check-email")
-    public ResponseEntity<Map<String, String>> checkEmailDuplicate(@Validated String email, BindingResult bindingResult) throws LoginInputInvalidException {
+    public ResponseEntity<Map<String, String>> checkEmailDuplicate(@RequestBody DuplicateCheckRequest request, BindingResult bindingResult) throws LoginInputInvalidException {
 
         checkBindingError(bindingResult);
 
-        service.isEmailCanBeUsed(email);
+        log.info("check email duplicated = {}", request.getEmail());
+
+        if(request.getEmail() == null) {
+            throw new LoginInputInvalidException(bindingResult);
+        }
+
+        service.isEmailCanBeUsed(request.getEmail());
 
         Map<String, String> res = new HashMap<>();
         res.put("message", "사용 가능한 이메일입니다.");
@@ -61,11 +69,15 @@ public class RegisterController {
     }
 
     @PostMapping("/check-nickname")
-    public ResponseEntity<Map<String, String>> checkNicknameDuplicate(@Validated String nickname, BindingResult bindingResult) throws LoginInputInvalidException {
+    public ResponseEntity<Map<String, String>> checkNicknameDuplicate(@RequestBody DuplicateCheckRequest request, BindingResult bindingResult) throws LoginInputInvalidException {
 
         checkBindingError(bindingResult);
 
-        service.isNicknameCanBeUsed(nickname);
+        if(request.getNickname() == null) {
+            throw new LoginInputInvalidException(bindingResult);
+        }
+
+        service.isNicknameCanBeUsed(request.getNickname());
 
         Map<String, String> res = new HashMap<>();
         res.put("message", "사용 가능한 닉네임입니다.");

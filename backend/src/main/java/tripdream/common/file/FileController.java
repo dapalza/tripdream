@@ -31,8 +31,6 @@ public class FileController {
 
         ImageResponse imageResponse = fileService.uploadImage(file);
 
-
-
         return new ResponseEntity<>(imageResponse, HttpStatus.OK);
     }
 

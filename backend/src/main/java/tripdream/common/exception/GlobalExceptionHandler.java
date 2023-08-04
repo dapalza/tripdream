@@ -6,17 +6,18 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SecurityException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.transaction.TransactionSystemException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import tripdream.common.dto.res.ErrorResponse;
 
-import javax.validation.ConstraintViolation;
 import java.time.format.DateTimeParseException;
 
 @RestControllerAdvice
@@ -27,9 +28,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleUnknownException(Exception e) {
         log.error("Unknown error = {}", e.toString());
         e.printStackTrace();
-        for (StackTraceElement el : e.getStackTrace()){
-            log.error("error loop = {}", el.toString());
-        }
+
         ErrorCode errorCode = ErrorCode.BASIC_ERROR_CODE;
         ErrorResponse response = new ErrorResponse(errorCode);
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
@@ -55,6 +54,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException e) {
+        e.printStackTrace();
+
         ErrorCode errorCode = ErrorCode.MEMBER_NOT_FOUND;
         ErrorResponse response = new ErrorResponse(errorCode);
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
@@ -103,6 +104,42 @@ public class GlobalExceptionHandler {
         ErrorCode errorCode = ErrorCode.DATETIME_PARSE_EXCEPTION;
         ErrorResponse response = new ErrorResponse(errorCode);
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
+    }
+
+    @ExceptionHandler(MultipartException.class)
+    public ResponseEntity<ErrorResponse> handleMultipartException(MultipartException e) {
+        e.printStackTrace();
+
+        ErrorCode errorCode = ErrorCode.NOT_CONTAIN_FILE;
+        ErrorResponse response = new ErrorResponse(errorCode);
+        return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
+    }
+
+    @ExceptionHandler({MissingServletRequestPartException.class})
+    public ResponseEntity<ErrorResponse> handleMissingServletRequestPartException(MissingServletRequestPartException e) {
+        e.printStackTrace();
+
+        ErrorCode errorCode = ErrorCode.INVALID_INPUT_VALUE;
+        ErrorResponse response = new ErrorResponse(errorCode);
+        return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
+    }
+
+    // 요청 방식 틀렸을 때 json으로 보내야하는데 form으로 보냈다던가
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e) {
+        e.printStackTrace();
+
+        ErrorCode errorCode = ErrorCode.UNCHECKED_REQUEST_TYPE;
+        ErrorResponse response = new ErrorResponse(errorCode);
+        return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        e.printStackTrace();
+
+        ErrorResponse response = new ErrorResponse(e.getMessage(), 400, "C000");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
 

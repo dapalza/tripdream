@@ -5,16 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import tripdream.common.entity.Member;
-import tripdream.common.exception.DuplicateEmailException;
-import tripdream.common.exception.DuplicateNicknameException;
-import tripdream.common.exception.InvalidGenderException;
-import tripdream.common.exception.PasswordIncorrectException;
-import tripdream.common.file.FileService;
+import tripdream.common.exception.*;
 import tripdream.common.repository.MemberRepository;
-
-import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -24,10 +17,12 @@ public class RegisterService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private final FileService fileService;
-
     @Transactional
-    public Member registerCustomer(Member member, MultipartFile image) throws IOException {
+    public Member registerCustomer(Member member) {
+
+        if(memberRepository.findByEmailOrNickname(member.getEmail(), member.getNickname()).isPresent()) {
+            throw new DuplicateException(ErrorCode.EMAIL_DUPLICATION);
+        }
 
         if (!member.getPassword().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$")){
             throw new PasswordIncorrectException();
@@ -48,8 +43,6 @@ public class RegisterService {
         member.storeRoles("MEMBER");
 
         log.info("hashing password end");
-
-        fileService.uploadImage(image);
 
         return memberRepository.save(member);
     }
