@@ -44,9 +44,9 @@ public class WebSecurityConfig{
                 .and()
                 .authorizeRequests()
                 // 회원가입 요청은 로그인을 요구하지 않음
-                .antMatchers("/api/register").permitAll()
+                .antMatchers("/api/register/**").permitAll()
                 // 로그인 요청은 로그인을 요구하지 않음
-                .antMatchers("/api/login").permitAll()
+                .antMatchers("/api/login/**").permitAll()
                 // refresh token 요청은 로그인을 요구하지 않음
                 .antMatchers("/api/refresh-token").permitAll()
                 .anyRequest().authenticated()

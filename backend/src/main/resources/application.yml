@@ -9,6 +9,10 @@ server:
   port: 8082
 logging.level:
   org.hibernate.SQL: info
+  com:
+    amazonaws:
+      util:
+        EC2MetadataUtils: error
 
 --- # common
 spring:
@@ -24,6 +28,19 @@ jwt:
   secret:
     VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
   access-token-validity-in-seconds: 60 * 1 # 1 min
+
+cloud:
+  aws:
+    s3:
+      bucket: tripdreambucket
+    credential:
+      access-key: AKIAZHDPFPGHKII5DWWD
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
 
 --- # localdb
 spring:
@@ -48,6 +65,10 @@ spring:
       max-request-size: 10MB
       location: D:\works\study\filetest
 
+custom:
+  path:
+    image: /image/local/
+
 --- # devdb
 spring:
   config:
@@ -61,7 +82,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
         format_sql: true
@@ -69,7 +90,9 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-      location: /var/lib/jenkins/deploy/tripdream/upload-images/
+custom:
+  path:
+    image: /image/dev/
 
 --- # proddb
 spring:
@@ -92,6 +115,9 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-      location: /var/lib/jenkins/deploy/tripdream/upload-images/
+      location: /home/storage/image/dev/
+custom:
+  path:
+    image: /image/tripdream/
 
 

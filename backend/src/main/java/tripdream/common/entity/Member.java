@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,6 +48,7 @@ public class Member extends CommonEntity implements UserDetails {
     private String password;
 
     // 성별 = N - 빈값, M - 남자, F - 여자
+    @Nullable
     private String gender;
 
     // 생일 (yyyy-MM-dd)
@@ -79,8 +81,12 @@ public class Member extends CommonEntity implements UserDetails {
 
     @PrePersist
     private void makeDefault() {
-        locked = false;
-        resigned_date = LocalDate.of(9999, 12, 31);
+        if(locked == null)
+            locked = false;
+        if(resigned_date == null)
+            resigned_date = LocalDate.of(9999, 12, 31);
+        if(gender == null)
+            gender = "N";
     }
 
     public void changeMemberToken(Token token) {

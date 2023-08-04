@@ -7,8 +7,7 @@ public enum ErrorCode {
 
     // Common
     BASIC_ERROR_CODE(500, "C000", "예외가 발생했습니다."),
-
-    INVALID_INPUT_VALUE(400, "C001", "입력값이 틀렸습니다."),
+    INVALID_INPUT_VALUE(400, "C001", "요청 값을 확인해주세요."),
     METHOD_NOT_ALLOWED(405, "C002", "Method Not Allowed"),
     HANDLE_ACCESS_DENIED(403, "C006", "접근이 거부되었습니다."),
     
@@ -17,12 +16,13 @@ public enum ErrorCode {
 
     DATETIME_PARSE_EXCEPTION(400, "C005", "날짜 형식 입력을 확인해주세요."),
 
+    UNCHECKED_REQUEST_TYPE(400, "C006", "요청 타입을 확인해주세요. json인가요?"),
+
     // Member
     // register
     EMAIL_DUPLICATION(400, "M001", "중복된 이메일입니다."),
 
     // login
-    LOGIN_INPUT_INVALID(400, "M002", "입력값을 확인해주세요."),
 
     EMAIL_NOT_FOUND(400, "M003", "없는 이메일입니다."),
     PASSWORD_INVALID(400, "M004", "비밀번호는 대문자, 소문자, 숫자, 특수문자 1개 이상 8~16자 입니다."),
@@ -32,6 +32,8 @@ public enum ErrorCode {
     NICKNAME_DUPLICATION(400, "M006", "중복된 닉네임입니다."),
 
     IP_DIFFERENCE(400, "M007", "작성자와 로그인 IP가 다릅니다."),
+
+    INVALID_GENDER(400, "M008", "성별은 M, F 중에 입력 가능합니다."),
 
 
 
@@ -53,7 +55,9 @@ public enum ErrorCode {
     INVALID_REFRESH_TOKEN(400, "T007", "REFRESH TOKEN이 존재하지 않습니다."),
 
     // File
-    FILE_NOT_FOUND(400, "F001", "파일 전송에 실패했습니다.");
+    FILE_NOT_FOUND(400, "F001", "해당되는 파일이 없습니다."),
+
+    NOT_CONTAIN_FILE(400, "F002", "파일을 첨부해주세요.");
 
     final String code;
     final String message;

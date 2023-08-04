@@ -1,4 +1,4 @@
-package tripdream.login;
+package tripdream.member.login;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
