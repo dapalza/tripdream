@@ -12,9 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -72,8 +70,8 @@ public class Member extends CommonEntity implements UserDetails {
 
     // Image 단방향 1:1
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "IMAGE_ID")
-    private Image image;
+    @JoinColumn(name = "S3FILE_ID")
+    private S3File s3File;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
@@ -91,6 +89,10 @@ public class Member extends CommonEntity implements UserDetails {
 
     public void changeMemberToken(Token token) {
         this.token = token;
+    }
+
+    public void changeS3File(S3File s3File) {
+        this.s3File = s3File;
     }
 
     // 비밀번호 암호화

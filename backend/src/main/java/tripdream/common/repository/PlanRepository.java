@@ -2,8 +2,8 @@ package tripdream.common.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import tripdream.common.entity.S3File;
+import tripdream.common.entity.Plan;
 
 @Repository
-public interface ImageRepository extends JpaRepository<S3File, Long> {
+public interface PlanRepository extends JpaRepository<Plan, Long> {
 }

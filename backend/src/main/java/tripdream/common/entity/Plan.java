@@ -1,10 +1,13 @@
 package tripdream.common.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import tripdream.common.dto.req.PlanRequest;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -12,6 +15,7 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Plan extends CommonEntity {
     @Id
     @GeneratedValue
@@ -65,6 +69,22 @@ public class Plan extends CommonEntity {
         peopleCount = peopleCount == 0 ? 1 : peopleCount;
         endYn = endYn == null ? "N" : endYn;
         chart = chart == null ? "LIST" : "CARD";
+    }
+
+    public Plan(PlanRequest planRequest) {
+        this.startDate = planRequest.getStartDate();
+        this.endDate = planRequest.getEndDate();
+        this.duration = planRequest.getDuration();
+        this.title = planRequest.getTitle();
+        this.countryCode = planRequest.getCountryCode();
+        this.cityCode = planRequest.getCityCode();
+        this.peopleCount = planRequest.getPeopleCount();
+        this.endYn = planRequest.getEndYn();
+        this.chart = planRequest.getChart();
+    }
+
+    public void changePlanId(Long planId) {
+        this.id = planId;
     }
 
 }
