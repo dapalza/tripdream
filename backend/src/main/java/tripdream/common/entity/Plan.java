@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import tripdream.common.dto.req.PlanRequest;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -38,7 +37,8 @@ public class Plan extends CommonEntity {
 
     // 국가 코드
     @NotNull
-    private String countryCode;
+    @Enumerated(EnumType.STRING)
+    private CountryCode countryCode;
 
     // 도시 코드
     @NotNull
@@ -48,10 +48,7 @@ public class Plan extends CommonEntity {
     private int peopleCount;
 
     // 만료 여부 (Y/N)
-    private String endYn;
-
-    // 리스트 형태 (LIST/CARD)
-    private String chart;
+    private boolean endYn;
 
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
@@ -67,8 +64,6 @@ public class Plan extends CommonEntity {
         duration = getEndDate().compareTo(startDate);
         title = title == null ? sb.append(id).toString() : title;
         peopleCount = peopleCount == 0 ? 1 : peopleCount;
-        endYn = endYn == null ? "N" : endYn;
-        chart = chart == null ? "LIST" : "CARD";
     }
 
     public Plan(PlanRequest planRequest) {
@@ -79,8 +74,7 @@ public class Plan extends CommonEntity {
         this.countryCode = planRequest.getCountryCode();
         this.cityCode = planRequest.getCityCode();
         this.peopleCount = planRequest.getPeopleCount();
-        this.endYn = planRequest.getEndYn();
-        this.chart = planRequest.getChart();
+        this.endYn = planRequest.isEndYn();
     }
 
     public void changePlanId(Long planId) {
