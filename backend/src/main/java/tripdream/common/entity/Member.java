@@ -64,6 +64,10 @@ public class Member extends CommonEntity implements UserDetails {
     // 탈퇴 날짜
     private LocalDate resigned_date;
 
+    // 리스트 형태 (LIST/CARD)
+    @Enumerated(EnumType.STRING)
+    private Chart chart;
+
     // Token 단방향 1:1
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "TOKEN_ID")
@@ -82,25 +86,9 @@ public class Member extends CommonEntity implements UserDetails {
     private void makeDefault() {
         if(locked == null)
             locked = false;
-        if(resigned_date == null)
-            resigned_date = LocalDate.of(9999, 12, 31);
-        if(gender == null)
-            gender = Gender.N;
-    }
-
-    public Member changeMemberData(MemberDataChangeRequest request) {
-        this.birth = request.getBirth() == null ? this.birth : request.getBirth();
-        this.email = request.getEmail() == null ? this.email : request.getEmail();
-        this.gender = request.getGender() == null ? this.gender : request.getGender();
-        this.locked = request.getLocked() == null ? this.locked : request.getLocked();
-        this.nickname = request.getNickname() == null ? this.nickname : request.getNickname();
-        this.locked = request.getLocked() == null ? this.locked : request.getLocked();
-
-        return this;
-    }
-
-    public void changePassword(String password) {
-        this.password = password;
+        resigned_date = resigned_date == null ? LocalDate.of(9999, 12, 31) : resigned_date;
+        gender = gender == null ? "N" : gender;
+        chart = chart == null ? Chart.LIST : Chart.CARD;
     }
 
     public void changeMemberToken(Token token) {

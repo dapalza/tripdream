@@ -1,10 +1,14 @@
 package tripdream.common.dto.req;
 
+import lombok.Builder;
 import lombok.Getter;
+import tripdream.common.entity.Chart;
+import tripdream.common.entity.CountryCode;
 
 import java.time.LocalDate;
 
 @Getter
+@Builder
 public class PlanRequest {
     // 여행 시작일
     private LocalDate startDate;
@@ -19,7 +23,7 @@ public class PlanRequest {
     private String title;
 
     // 국가 코드
-    private String countryCode;
+    private CountryCode countryCode;
 
     // 도시 코드
     private String cityCode;
@@ -27,9 +31,9 @@ public class PlanRequest {
     // 인원
     private int peopleCount;
 
-    // 만료 여부 (Y/N)
-    private String endYn;
+    // 만료 여부
+    private boolean endYn;
 
     // 리스트 형태 (LIST/CARD)
-    private String chart;
+    private Chart chart;
 }
