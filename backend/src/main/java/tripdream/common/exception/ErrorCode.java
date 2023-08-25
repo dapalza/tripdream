@@ -26,6 +26,8 @@ public enum ErrorCode {
 
     EMAIL_NOT_FOUND(400, "M003", "없는 이메일입니다."),
     PASSWORD_INVALID(400, "M004", "비밀번호는 대문자, 소문자, 숫자, 특수문자 1개 이상 8~16자 입니다."),
+    PASSWORD_INCORRECT(400, "M010", "비밀번호가 틀렸습니다."),
+
 
     MEMBER_NOT_FOUND(400, "M005", "회원정보가 없습니다."),
 
@@ -57,7 +59,10 @@ public enum ErrorCode {
     // File
     FILE_NOT_FOUND(400, "F001", "해당되는 파일이 없습니다."),
 
-    NOT_CONTAIN_FILE(400, "F002", "파일을 첨부해주세요.");
+    NOT_CONTAIN_FILE(400, "F002", "파일을 첨부해주세요."),
+
+    // Plan
+    NO_SUCH_PLAN(400, "P001", "실존하지 않는 계획입니다. PLAN의 ID와 함께 요청해주세요.");
 
     final String code;
     final String message;

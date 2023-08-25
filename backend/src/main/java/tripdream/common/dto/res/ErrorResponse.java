@@ -3,8 +3,10 @@ package tripdream.common.dto.res;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.validation.FieldError;
 import tripdream.common.exception.ErrorCode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -21,7 +23,7 @@ public class ErrorResponse {
     // 자체 에러코드
     private String code;
 
-    private List<CustomFieldError> customFieldErrors;
+    private List<FieldError> fieldErrors = new ArrayList<>();
 
     public ErrorResponse(String message, int status, String code) {
         this.message = message;
@@ -33,6 +35,13 @@ public class ErrorResponse {
         this.message = errorCode.getMessage();
         this.status = errorCode.getStatus();
         this.code = errorCode.getCode();
+    }
+
+    public ErrorResponse(ErrorCode errorCode, List<FieldError> fieldErrors) {
+        this.message = errorCode.getMessage();
+        this.status = errorCode.getStatus();
+        this.code = errorCode.getCode();
+        this.fieldErrors = fieldErrors;
     }
 
     private static class CustomFieldError {

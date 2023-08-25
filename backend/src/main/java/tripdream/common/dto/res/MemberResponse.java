@@ -2,6 +2,7 @@ package tripdream.common.dto.res;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import tripdream.common.entity.Gender;
 import tripdream.common.entity.Member;
 
 import javax.validation.constraints.NotBlank;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class RegisterResponse {
+public class MemberResponse {
     // 이메일
     @NotBlank
     private String email;
@@ -20,7 +21,7 @@ public class RegisterResponse {
     private String password;
 
     // 성별 = N - 빈값, M - 남자, F - 여자
-    private String gender;
+    private Gender gender;
 
     // 생일 (yyyy-MM-dd)
     private LocalDate birth;
@@ -45,7 +46,7 @@ public class RegisterResponse {
 
     private String lastModifiedByIp;
 
-    public RegisterResponse(Member member) {
+    public MemberResponse(Member member) {
         this.email = member.getEmail();
         this.password = member.getPassword();
         this.nickname = member.getNickname();

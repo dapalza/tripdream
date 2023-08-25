@@ -25,7 +25,7 @@ public class RegisterService {
         }
 
         if (!member.getPassword().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$")){
-            throw new PasswordIncorrectException();
+            throw new PasswordInvalidException();
         }
 
         if(member.getGender() != null) {

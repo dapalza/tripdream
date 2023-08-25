@@ -12,6 +12,6 @@ import javax.validation.constraints.NotNull;
 public class ImageRequest {
 
     @NotNull
-    private String refreshToken;
+    private String nickname;
 
 }

@@ -8,14 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import tripdream.common.entity.Image;
 import tripdream.common.entity.Member;
-import tripdream.common.entity.Token;
 import tripdream.common.repository.MemberRepository;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.UUID;
 
 
 @SpringBootTest
@@ -37,7 +33,7 @@ class RegisterServiceTest{
                 .email("abc@email.com")
                 .password(hashedPassword)
                 .nickname("nicknameA")
-                .birth(LocalDate.of(1998, 02, 24))
+                .birth(LocalDate.of(1998, 2, 24))
                 .build();
 
         //when

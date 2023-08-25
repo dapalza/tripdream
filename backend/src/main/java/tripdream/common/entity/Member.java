@@ -10,11 +10,10 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import tripdream.common.dto.req.MemberDataChangeRequest;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,7 +30,7 @@ import java.util.stream.Collectors;
 public class Member extends CommonEntity implements UserDetails {
 
     @Id
-    @Column(name = "MEMBER_ID")
+    @Column(name = "MEMBER_ID", updatable = false)
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
@@ -49,7 +48,7 @@ public class Member extends CommonEntity implements UserDetails {
 
     // 성별 = N - 빈값, M - 남자, F - 여자
     @Nullable
-    private String gender;
+    private Gender gender;
 
     // 생일 (yyyy-MM-dd)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -72,8 +71,8 @@ public class Member extends CommonEntity implements UserDetails {
 
     // Image 단방향 1:1
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "IMAGE_ID")
-    private Image image;
+    @JoinColumn(name = "S3FILE_ID")
+    private S3File s3File;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
@@ -86,11 +85,30 @@ public class Member extends CommonEntity implements UserDetails {
         if(resigned_date == null)
             resigned_date = LocalDate.of(9999, 12, 31);
         if(gender == null)
-            gender = "N";
+            gender = Gender.N;
+    }
+
+    public Member changeMemberData(MemberDataChangeRequest request) {
+        this.birth = request.getBirth() == null ? this.birth : request.getBirth();
+        this.email = request.getEmail() == null ? this.email : request.getEmail();
+        this.gender = request.getGender() == null ? this.gender : request.getGender();
+        this.locked = request.getLocked() == null ? this.locked : request.getLocked();
+        this.nickname = request.getNickname() == null ? this.nickname : request.getNickname();
+        this.locked = request.getLocked() == null ? this.locked : request.getLocked();
+
+        return this;
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
     }
 
     public void changeMemberToken(Token token) {
         this.token = token;
+    }
+
+    public void changeS3File(S3File s3File) {
+        this.s3File = s3File;
     }
 
     // 비밀번호 암호화

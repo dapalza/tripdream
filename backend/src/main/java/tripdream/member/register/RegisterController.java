@@ -12,7 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import tripdream.common.dto.req.DuplicateCheckRequest;
 import tripdream.common.dto.res.ErrorResponse;
-import tripdream.common.dto.res.RegisterResponse;
+import tripdream.common.dto.res.MemberResponse;
 import tripdream.common.entity.Member;
 import tripdream.common.exception.LoginInputInvalidException;
 
@@ -37,14 +37,14 @@ public class RegisterController {
     @PostMapping
     @Operation(summary = "회원가입", description = "/api/register로 요청")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "성공", response = RegisterResponse.class),
+            @ApiResponse(code = 200, message = "성공", response = MemberResponse.class),
             @ApiResponse(code = 500, message = "서버 오류", response = ErrorResponse.class)
     })
-    public ResponseEntity<RegisterResponse> register(@RequestBody @Validated Member member, BindingResult bindingResult) throws LoginInputInvalidException, IOException {
+    public ResponseEntity<MemberResponse> register(@RequestBody @Validated Member member, BindingResult bindingResult) throws LoginInputInvalidException, IOException {
 
         checkBindingError(bindingResult);
 
-        RegisterResponse res = new RegisterResponse(service.registerCustomer(member));
+        MemberResponse res = new MemberResponse(service.registerCustomer(member));
         return new ResponseEntity<>(res, HttpStatus.OK);
 
    }

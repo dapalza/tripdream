@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import tripdream.common.dto.res.ImageResponse;
+import tripdream.common.entity.S3File;
 import tripdream.common.exception.FileNotFoundException;
 
 import java.io.File;
@@ -29,7 +30,9 @@ public class FileController {
     @PostMapping("/upload")
     public ResponseEntity<ImageResponse> uploadImage(@RequestPart MultipartFile file) throws IOException {
 
-        ImageResponse imageResponse = fileService.uploadImage(file);
+        S3File s3File = fileService.uploadImage(file);
+
+        ImageResponse imageResponse = new ImageResponse(s3File.getFullPath());
 
         return new ResponseEntity<>(imageResponse, HttpStatus.OK);
     }

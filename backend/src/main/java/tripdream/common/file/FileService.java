@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import tripdream.common.dto.res.ImageResponse;
+import tripdream.common.entity.S3File;
 import tripdream.common.exception.FileNotFoundException;
 import tripdream.common.repository.ImageRepository;
 
@@ -19,8 +20,6 @@ import java.io.IOException;
 @Transactional
 @Slf4j
 public class FileService {
-
-    private final ImageRepository imageRepository;
 
     private String bucket;
 
@@ -33,30 +32,32 @@ public class FileService {
                        ImageRepository imageRepository, AmazonS3Client amazonS3Client) {
         this.bucket = bucket;
         this.path = path;
-        this.imageRepository = imageRepository;
         this.amazonS3Client = amazonS3Client;
     }
 
-    public ImageResponse uploadImage(MultipartFile file) throws IOException {
+    public S3File uploadImage(MultipartFile file) throws IOException {
         log.info("upload image = {}", file.toString());
 
         if(!file.isEmpty()) {
-            ImageResponse imageResponse = new ImageResponse(file.getOriginalFilename());
-            String fileUrl = "https://" + bucket + path + file.getOriginalFilename();
+            String fileUrl = path + file.getOriginalFilename();
+
+            S3File s3File = new S3File(fileUrl);
+
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(file.getContentType());
             metadata.setContentLength(file.getSize());
 
-            amazonS3Client.putObject(bucket, file.getOriginalFilename(), file.getInputStream(), metadata);
+            amazonS3Client.putObject(bucket, fileUrl, file.getInputStream(), metadata);
 
-            return imageResponse;
+            return s3File;
         } else {
             throw new FileNotFoundException();
         }
 
     }
 
-    public ImageResponse deleteImage(String path, String fileName) {
+    public ImageResponse deleteImage(String fileUrl) {
+        amazonS3Client.deleteObject(bucket, fileUrl);
         return null;
     }
 }

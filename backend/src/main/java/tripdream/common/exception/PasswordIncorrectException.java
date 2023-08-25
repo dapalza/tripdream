@@ -2,6 +2,6 @@ package tripdream.common.exception;
 
 public class PasswordIncorrectException extends CustomLoginException {
     public PasswordIncorrectException() {
-        super(ErrorCode.PASSWORD_INVALID);
+        super(ErrorCode.PASSWORD_INCORRECT);
     }
 }

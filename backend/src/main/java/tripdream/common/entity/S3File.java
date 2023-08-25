@@ -13,16 +13,16 @@ import javax.persistence.Id;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Image extends CommonEntity{
+public class S3File extends CommonEntity{
     @Id
     @GeneratedValue
-    @Column(name = "IMAGE_ID")
+    @Column(name = "S3FILE_ID")
     private Long id;
 
-    // 이미지 경로
+    // 이미지 경로(파일명 포함)
     private String fullPath;
 
-    // 이미지 파일명
-    private String name;
-
+    public S3File(String fullPath) {
+        this.fullPath = fullPath;
+    }
 }
