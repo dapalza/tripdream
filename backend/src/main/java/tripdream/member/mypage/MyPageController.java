@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tripdream.common.dto.req.ImageRequest;
 import tripdream.common.dto.req.MemberDataChangeRequest;
+import tripdream.common.dto.req.PasswordChangeRequest;
 import tripdream.common.dto.res.ImageResponse;
+import tripdream.common.dto.res.MemberResponse;
 import tripdream.common.entity.S3File;
 import tripdream.common.file.FileService;
 
@@ -37,8 +39,19 @@ public class MyPageController {
         return new ResponseEntity<>(imageResponse, HttpStatus.OK);
     }
 
-    public ResponseEntity changeMemberData(@RequestBody @Validated MemberDataChangeRequest request) {
-        return null;
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    @PostMapping("/change/member-data")
+    public ResponseEntity<MemberResponse> changeMemberData(@RequestBody @Validated MemberDataChangeRequest request) {
+        MemberResponse memberResponse = myPageService.changeMemberData(request);
+
+        return new ResponseEntity<>(memberResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/change/password")
+    public ResponseEntity<String> changeOldPassword(@RequestBody @Validated PasswordChangeRequest request) {
+        myPageService.changeOldPassword(request);
+
+        return new ResponseEntity<>("password changed", HttpStatus.OK);
     }
 
 }

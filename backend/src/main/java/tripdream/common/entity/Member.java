@@ -10,6 +10,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import tripdream.common.dto.req.MemberDataChangeRequest;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 public class Member extends CommonEntity implements UserDetails {
 
     @Id
-    @Column(name = "MEMBER_ID")
+    @Column(name = "MEMBER_ID", updatable = false)
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
@@ -47,7 +48,7 @@ public class Member extends CommonEntity implements UserDetails {
 
     // 성별 = N - 빈값, M - 남자, F - 여자
     @Nullable
-    private String gender;
+    private Gender gender;
 
     // 생일 (yyyy-MM-dd)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
